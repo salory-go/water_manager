@@ -1,0 +1,8 @@
+example:
+  datasource:
+    dataBase: example
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    port: 3306
+    username: root
+    password: lzs
+    host: localhost

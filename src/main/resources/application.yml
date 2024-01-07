@@ -1,0 +1,15 @@
+spring:
+  profiles:
+    active: dev
+  datasource:
+    druid:
+      driver-class-name: ${example.datasource.driver-class-name}
+      url: jdbc:mysql://${example.datasource.host}:${example.datasource.port}/${example.datasource.dataBase}?serverTimezone=UTC
+      username: ${example.datasource.username}
+      password: ${example.datasource.password}
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+

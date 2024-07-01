@@ -1,0 +1,9 @@
+{
+  "name": "water_manager-master",
+  "version": "1.0.0",
+  "dependencies": {
+    "@angular/core": "^18.0.5",
+    "axios": "^1.7.2",
+    "rxjs": "^7.8.1"
+  }
+}

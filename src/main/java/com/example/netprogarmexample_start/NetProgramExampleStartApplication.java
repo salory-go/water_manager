@@ -9,5 +9,4 @@ public class NetProgramExampleStartApplication {
     public static void main(String[] args) {
         SpringApplication.run(NetProgramExampleStartApplication.class, args);
     }
-
 }

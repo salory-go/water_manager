@@ -273,3 +273,17 @@ CREATE TABLE `smzflgccygb`  (
 INSERT INTO `smzflgccygb` VALUES ('60540350', '2.01050689145569e+19', '2010-12-23', NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+# 管理员表
+create table administrator
+(
+    id       int auto_increment
+        primary key,
+    username varchar(20) not null comment '用户名',
+    password varchar(20) not null comment '密码',
+    constraint administrator_pk
+        unique (username)
+);
+
+# 管理员数据
+insert into administrator(username, password) values ('root', '123456');

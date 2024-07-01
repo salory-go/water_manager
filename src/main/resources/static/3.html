@@ -50,20 +50,21 @@
 </head>
 <body>
 <div id="header">
-    <!--    <img id="image" src="your_image_url.jpg" alt="顶部图片">-->
+<!--    <img id="image" src="your_image_url.jpg" alt="顶部图片">-->
     <p>当前时间: <span id="current-time"></span></p>
 </div>
-
-<!-- 测站管理表格 -->
 <div id="content">
     <h1>测站管理</h1>
     <!-- 中间层标题 -->
-    <!--    <p>这是测站管理页面的其他内容..</p>-->
+<!--    <p>这是测站管理页面的其他内容...</p>-->
     <a href="1.html">测站基本信息表</a>
     <a href="2.html">河流基本信息表</a>
     <a href="3.html">水面蒸发量观测场表</a>
-    <!-- 测站管理表格 -->
-    <h1>测站基本信息</h1>
+</div>
+<!-- 水面蒸发量观测场表格 -->
+<div id="evaporationContent">
+    <h1>水面蒸发量观测场</h1>
+    <!-- 水面蒸发量观测场表格 -->
     <div style="text-align: right;">
         <button id="button" onclick="addRow()">添加</button>
     </div>
@@ -71,62 +72,25 @@
         <thead>
         <tr>
             <th>测站名称</th>
-            <th>测站编码</th>
-            <th>站址</th>
-            <th>开始时间</th>
-            <th>结束时间</th>
-            <th>河流编码</th>
-            <th>测站类型</th>
-            <th>东经</th>
-            <th>北纬</th>
+            <th>蒸发量观测场编码</th>
+            <th>蒸发场位置特征</th>
+            <th>蒸发器样式</th>
+            <th>附件地势</th>
+            <th>四周障碍物</th>
+            <th>管理单位码</th>
+            <th>变动日期</th>
+            <th>变动情况</th>
             <th></th>
             <th>操作</th>
         </tr>
         </thead>
-        <tbody id="stationTableBody">
+        <tbody id="evaporationTableBody">
         <!-- 数据将由 JavaScript 动态填充 -->
         </tbody>
     </table>
-    <div>
-        <button onclick="addRow('stationTableBody')">添加</button>
-    </div>
+
 </div>
 <script>
-
-    // 添加行的逻辑
-    function addRow() {
-        window.location.href = `add.html`;
-    }
-    // 删除行的逻辑
-    function deleteRow(stationName) {
-        // 发送DELETE请求到后端，将数据从数据库中删除
-
-        stationName = stationName.code
-        console.log(stationName)
-        fetch(`http://localhost:8080/CZ/${stationName}`, {
-            method: 'DELETE',
-        }).then(res => {
-            fetchDataAndRenderTable();
-        })
-        // 在前端删除对应的行
-        const rowToDelete = document.querySelector(`#stationTableBody tr[data-name="${stationName}"]`);
-        if (rowToDelete) {
-            rowToDelete.remove();
-        }
-    }
-
-    // 修改行的逻辑
-    function updateRow(rowData) {
-        // 构建参数字符串
-        const paramString = `?name=${rowData.name}&code=${rowData.code}&address=${rowData.address}
-        &e=${rowData.e}&w=${rowData.w}&endTime=${rowData.endTime}&startTime=${rowData.startTime}
-        &type=${rowData.type}&waterName=${rowData.waterName}`;
-
-        // 跳转到新的页面并传入参数
-        window.location.href = `update.html${paramString}`;
-    }
-
-
     // 获取当前时间
     function getCurrentTime() {
         const now = new Date();
@@ -147,10 +111,21 @@
     // 更新时间每秒钟
     setInterval(updateCurrentTime, 1000);
 
+    // 全选/取消全选功能
+    const selectAllCheckbox = document.getElementById('selectAll');
+    const checkboxes = document.querySelectorAll('tbody input[type="checkbox"]');
+
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', function() {
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+        });
+    }
 
     // 异步请求数据并渲染表格
     function fetchDataAndRenderTable() {
-        fetch('http://localhost:8080/CZ') // 替换为实际的数据接口地址
+        fetch('http://localhost:8080/ZF') // 替换为实际的数据接口地址
             .then(response => response.json())
             .then(data => renderTable(data))
             .catch(error => console.error('Error fetching data:', error));
@@ -158,12 +133,13 @@
 
     // 渲染表格
     function renderTable(data) {
-        const tbody = document.querySelector('#stationTableBody'); // 修正选择器
+        const tbody = document.querySelector('tbody');
+
         // 清空原有数据
         tbody.innerHTML = '';
+
         // 遍历数据并插入新的行
         data.forEach(rowData => {
-
             const row = document.createElement('tr');
 
             // 创建单元格并插入数据
@@ -171,7 +147,7 @@
                 const cell = document.createElement('td');
                 cell.textContent = rowData[key];
                 if(rowData[key]!=null)
-                    row.appendChild(cell);
+                row.appendChild(cell);
             }
 
             // 添加复选框列
@@ -183,16 +159,13 @@
 
             // 添加操作列
             const actionCell = document.createElement('td');
-
-            // 添加“删除”按钮
             const deleteButton = document.createElement('button');
             deleteButton.textContent = '删除';
-            deleteButton.onclick = function () {
-                // 添加相应的删除逻辑
-                deleteRow(rowData);
-
+            deleteButton.onclick = function() {
+                deleteRow(rowData.name);
             };
             actionCell.appendChild(deleteButton);
+            row.appendChild(actionCell);
 
             // 添加“修改”按钮
             const updateButton = document.createElement('button');

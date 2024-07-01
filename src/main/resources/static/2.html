@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>测站管理</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    #header {
+      background-color: #333;
+      color: #fff;
+      padding: 10px;
+    }
+
+    #content {
+      padding: 20px;
+    }
+
+    #image {
+      max-width: 100%;
+      height: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #333;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+<div id="header">
+<!--  <img id="image" src="your_image_url.jpg" alt="顶部图片">-->
+  <p>当前时间: <span id="current-time"></span></p>
+</div>
+
+<!-- 测站管理表格 -->
+<div id="content">
+  <h1>测站管理</h1>
+  <!-- 中间层标题 -->
+<!--  <p>这是测站管理页面的其他内容...</p>-->
+  <a href="1.html">测站基本信息表</a>
+  <a href="2.html">河流基本信息表</a>
+  <a href="3.html">水面蒸发量观测场表</a>
+</div>
+<!-- 河流基本信息表格 -->
+<div id="riverContent">
+  <h1>河流基本信息</h1>
+  <!-- 河流基本信息表格 -->
+  <div style="text-align: right;">
+    <button id="button" onclick="addRow()">添加</button>
+  </div>
+  <table>
+    <thead>
+    <tr>
+      <th>河流名称</th>
+      <th>河流编码</th>
+      <th>流域名称</th>
+      <th>测站编码</th>
+      <th>水系名称</th>
+      <th></th>
+      <th>操作</th>
+    </tr>
+    </thead>
+    <tbody id="riverTableBody">
+    <!-- 数据将由 JavaScript 动态填充 -->
+    </tbody>
+  </table>
+</div>
+<script>
+  // 获取当前时间
+  function getCurrentTime() {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const seconds = now.getSeconds();
+    return `${hours}:${minutes}:${seconds}`;
+  }
+
+  // 更新时间显示
+  function updateCurrentTime() {
+    const currentTimeElement = document.getElementById('current-time');
+    if (currentTimeElement) {
+      currentTimeElement.textContent = getCurrentTime();
+    }
+  }
+
+  // 更新时间每秒钟
+  setInterval(updateCurrentTime, 1000);
+
+  // 异步请求数据并渲染表格
+  function fetchDataAndRenderTable() {
+    fetch('http://localhost:8080/HL') // 替换为实际的数据接口地址
+            .then(response => response.json())
+            .then(data => renderTable(data))
+            .catch(error => console.error('Error fetching data:', error));
+  }
+
+  // 渲染表格
+  function renderTable(data) {
+    const tbody = document.querySelector('tbody');
+
+    // 清空原有数据
+    tbody.innerHTML = '';
+
+    // 遍历数据并插入新的行
+    data.forEach(rowData => {
+      const row = document.createElement('tr');
+
+      // 创建单元格并插入数据
+      for (const key in rowData) {
+        const cell = document.createElement('td');
+        cell.textContent = rowData[key];
+        row.appendChild(cell);
+      }
+
+      // 添加复选框列
+      const checkboxCell = document.createElement('td');
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkboxCell.appendChild(checkbox);
+      row.appendChild(checkboxCell);
+
+      // 添加操作列
+      const actionCell = document.createElement('td');
+
+      // 添加“删除”按钮
+      const deleteButton = document.createElement('button');
+      deleteButton.textContent = '删除';
+      deleteButton.onclick = function () {
+        // 添加相应的删除逻辑
+        deleteRow(rowData);
+
+      };
+      actionCell.appendChild(deleteButton);
+
+      // 添加“修改”按钮
+      const updateButton = document.createElement('button');
+      updateButton.textContent = '修改';
+      updateButton.onclick = function () {
+        // 添加相应的修改逻辑
+        updateRow(rowData);
+        // console.log(rowData);
+      };
+      actionCell.appendChild(updateButton);
+
+      row.appendChild(actionCell);
+
+      tbody.appendChild(row);
+    });
+  }
+
+  // 初始化页面时加载数据
+  fetchDataAndRenderTable();
+</script>
+
+</body>
+</html>

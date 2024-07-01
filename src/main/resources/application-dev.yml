@@ -1,6 +1,6 @@
 example:
   datasource:
-    dataBase: example
+    dataBase: water_manager
     driver-class-name: com.mysql.cj.jdbc.Driver
     port: 3306
     username: root

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>表格输入页面</title>
+</head>
+<style>
+    .centered-button {
+        display: block;
+        margin: auto;
+        padding: 10px 20px; /* 调整按钮大小 */
+    }
+</style>
+<body>
+
+<h2>表格输入</h2>
+
+<form id="stationForm">
+    <table class="centered-button">
+        <tr>
+            <th>测站名称</th>
+            <th>测站类型</th>
+        </tr>
+
+        <tr>
+            <!-- 将前一个页面传递的数据显示在输入框中 -->
+            <td><input id="name" type="text" name="name" required></td>
+
+            <td><input id="type" type="text" name="type" required></td>
+
+        </tr>
+        <tr>
+            <th>河流编码</th>
+            <th>河流名称</th>
+            <th>水系名称</th>
+        </tr>
+        <tr>
+            <td><input id="waterName" type="text" name="waterName" required></td>
+            <td><input id="riverName" type="text" name="riverName" required></td>
+            <td><input id="waterField" type="text" name="waterField" required></td>
+        </tr>
+        <tr>
+            <th>测站编码</th>
+            <th>站址</th>
+            <th>东经</th>
+            <th>北纬</th>
+        </tr>
+        <tr>
+            <td><input id="code" type="text" name="code" required></td>
+            <td><input id="address" type="text" name="address" required></td>
+            <td><input id="e"  type="text" name="e"  required></td>
+            <td><input id="w"  type="text" name="w"  required></td>
+
+        </tr>
+        <tr>
+            <th>开始时间</th>
+            <th>结束时间</th>
+            <th>行政区划码</th>
+        </tr>
+        <tr>
+            <td><input id="startTime" type="text" name="startTime"  required></td>
+            <td><input id="endTime" type="text" name="endTime"  required></td>
+            <td><input id="acd"  type="text" name="acd"  required></td>
+        </tr>
+    </table>
+
+
+
+    <button class="centered-button" type="button" onclick="submitForm()">提交</button>
+
+</form>
+
+<script>
+    function submitForm() {
+        // 获取表单数据
+        const formData = new FormData(document.getElementById('stationForm'));
+        console.log(JSON.stringify(Object.fromEntries(formData)))
+        // 发送 POST 请求
+        fetch('http://localhost:8080/CZ/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(Object.fromEntries(formData)),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error submitting form`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // 处理成功的响应
+                console.log('Form submitted successfully:', data);
+                window.location.href = `1.html`;
+            })
+            .catch(error => console.error('Error submitting form:', error));
+    }
+</script>
+
+</body>
+</html>

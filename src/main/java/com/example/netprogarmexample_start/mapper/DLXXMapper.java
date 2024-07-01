@@ -17,7 +17,7 @@ import java.util.List;
 @Mapper
 public interface DLXXMapper {
 
-    @Select("select * from water_manager.czdlxx")
+    @Select("select * from czdlxxb")
     public List<DLXX> getAll();
 
     public List<VO> get();

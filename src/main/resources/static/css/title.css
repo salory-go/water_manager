@@ -1,0 +1,74 @@
+#clipped-title1 {
+    background: url(../images/sea.jpg) no-repeat center center;
+    background-size: cover;
+    color: #fff;
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+}
+
+#clipped-title2 {
+    background: url(../images/1.jpg)no-repeat top center;
+    background-size: cover;
+    color: #fff;
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    cursor: pointer;
+}
+
+#clipped-title3 {
+    background: url(../images/2.jpg)no-repeat top center;
+    background-size: cover;
+    color: #fff;
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    cursor: pointer;
+}
+
+#clipped-title4 {
+    background: url(../images/3.jpg)no-repeat top center;
+    background-size: cover;
+    color: #fff;
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    cursor: pointer;
+}
+
+#clipped-title1 h1 {
+    font-size: 200px;
+    font-family: Anton, sans-serif;
+    text-align: center;
+    -webkit-transition: text-shadow 1s ease;
+    text-shadow: 0 0 1px rgba(0,0,0,.1);
+    margin: 0;
+    padding: 0;
+}
+
+#clipped-title2 h1 {
+    /*font-size: 110px;*/
+    font-family: Pacifico, sans-serif;
+    text-align: center;
+    -webkit-transition: text-shadow 1s ease;
+    text-shadow: 0 0 1px rgba(0,0,0,.1);
+    /*margin-top: -75px;*/
+    padding: 0;
+}
+
+#clipped-title3 h1 {
+    /*font-size: 110px;*/
+    font-family: Pacifico, sans-serif;
+    text-align: center;
+    -webkit-transition: text-shadow 1s ease;
+    text-shadow: 0 0 1px rgba(0,0,0,.1);
+    /*margin-top: -75px;*/
+    padding: 0;
+}
+
+#clipped-title4 h1 {
+    /*font-size: 110px;*/
+    font-family: Pacifico, sans-serif;
+    text-align: center;
+    -webkit-transition: text-shadow 1s ease;
+    text-shadow: 0 0 1px rgba(0,0,0,.1);
+    /*margin-top: -75px;*/
+    padding: 0;
+}

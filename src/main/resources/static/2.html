@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>测站管理</title>
   <link rel="stylesheet" href="./css/title.css">
+  <link rel="stylesheet" href="./layui-v2.9.3/layui/css/layui.css">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -34,14 +35,14 @@
       margin-top: 20px;
     }
 
-    table, th, td {
-      border: 1px solid #ddd;
-    }
+    /*table, th, td {*/
+    /*  border: 1px solid #ddd;*/
+    /*}*/
 
-    th, td {
-      padding: 10px;
-      text-align: left;
-    }
+    /*th, td {*/
+    /*  padding: 10px;*/
+    /*  text-align: left;*/
+    /*}*/
 
     th {
       background-color: #333;
@@ -73,9 +74,12 @@
   </div>
   <!-- 河流基本信息表格 -->
   <div style="text-align: right;">
-    <button id="button" onclick="addRow()">添加</button>
+<!--    <button id="button" onclick="addRow()">添加</button>-->
+    <button type="button" class="layui-btn layui-btn-sm layui-btn-radius" onclick="addRow()">
+      <i class="layui-icon layui-icon-add-1"></i>
+    </button>
   </div>
-  <table>
+  <table class="layui-table">
     <thead>
     <tr>
       <th>河流名称</th>
@@ -151,7 +155,10 @@
 
       // 添加“删除”按钮
       const deleteButton = document.createElement('button');
-      deleteButton.textContent = '删除';
+      deleteButton.innerHTML = '<i class="layui-icon layui-icon-delete"></i>';
+      const cls_del = ["layui-btn","layui-btn-sm","layui-btn-radius","layui-btn-danger"];
+      deleteButton.classList.add(...cls_del);
+      deleteButton.type="button";
       deleteButton.onclick = function () {
         // 添加相应的删除逻辑
         deleteRow(rowData);
@@ -161,16 +168,17 @@
 
       // 添加“修改”按钮
       const updateButton = document.createElement('button');
-      updateButton.textContent = '修改';
+      updateButton.innerHTML = '<i class="layui-icon layui-icon-edit"></i>';
+      const cls_edit = ["layui-btn","layui-btn-sm","layui-btn-radius","layui-btn-normal"];
+      updateButton.classList.add(...cls_edit);
+      updateButton.type="button";
       updateButton.onclick = function () {
         // 添加相应的修改逻辑
         updateRow(rowData);
         // console.log(rowData);
       };
       actionCell.appendChild(updateButton);
-
       row.appendChild(actionCell);
-
       tbody.appendChild(row);
     });
   }

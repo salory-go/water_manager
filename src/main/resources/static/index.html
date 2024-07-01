@@ -11,7 +11,6 @@
     .demo-login-container{width: 320px; margin: 21px auto 0;}
     .demo-login-other .layui-icon{position: relative; display: inline-block; margin: 0 2px; top: 2px; font-size: 26px;}
 </style>
-
 <form class="layui-form">
     <div class="demo-login-container">
         <div class="layui-form-item">
@@ -65,12 +64,14 @@
         // 提交事件
         form.on('submit(demo-login)', function(data){
             var field = data.field; // 获取表单字段值
-            // 显示填写结果，仅作演示用
-            layer.alert(JSON.stringify(field), {
-                title: '当前填写的字段值'
-            });
             // 此处可执行 Ajax 等操作
-            // …
+            console.log(field)
+            layer.ajax({
+                method:"POST",
+                url:"http://localhost:8080/login"
+            }).then(res => {
+                console.log(res);
+            })
             return false; // 阻止默认 form 跳转
         });
     });

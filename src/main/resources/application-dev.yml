@@ -4,5 +4,5 @@ example:
     driver-class-name: com.mysql.cj.jdbc.Driver
     port: 3306
     username: root
-    password: twj20030129
+    password: 500237
     host: localhost

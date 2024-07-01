@@ -1,10 +1,7 @@
 package com.example.netprogarmexample_start.controller;
 
 import com.example.netprogarmexample_start.mapper.IMapper;
-import com.example.netprogarmexample_start.pojo.CZ;
-import com.example.netprogarmexample_start.pojo.HL;
-import com.example.netprogarmexample_start.pojo.VO;
-import com.example.netprogarmexample_start.pojo.ZF;
+import com.example.netprogarmexample_start.pojo.*;
 import com.example.netprogarmexample_start.result.Result;
 import com.example.netprogarmexample_start.service.VOService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +32,12 @@ public class indexController {
     public List<CZ> test1(){
 //        System.out.println(mapper.getCZ());
         return mapper.getCZ();
+    }
+
+    @GetMapping("/CZGL")
+    @ResponseBody
+    public List<CZGL> getCZGL(){
+        return mapper.getCZGL();
     }
 
     @DeleteMapping("/CZ/{code}")

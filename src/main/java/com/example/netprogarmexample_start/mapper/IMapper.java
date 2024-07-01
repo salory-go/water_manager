@@ -1,6 +1,7 @@
 package com.example.netprogarmexample_start.mapper;
 
 import com.example.netprogarmexample_start.pojo.CZ;
+import com.example.netprogarmexample_start.pojo.CZGL;
 import com.example.netprogarmexample_start.pojo.HL;
 import com.example.netprogarmexample_start.pojo.ZF;
 import org.apache.ibatis.annotations.*;
@@ -18,6 +19,9 @@ import java.util.List;
 
 @Mapper
 public interface IMapper {
+
+    @Select("SELECT * from czglxxygb")
+    public List<CZGL> getCZGL();
 
     @Select("SELECT\n" +
             "    a.STNM AS \"name\",\n" +

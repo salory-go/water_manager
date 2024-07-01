@@ -169,7 +169,7 @@
     // 异步请求数据并渲染表格
     async function fetchDataAndRenderTable() {
         try {
-            const response = await fetch('http://localhost:8080/CZ'); // 替换为实际的数据接口地址
+            const response = await fetch('http://localhost:8080/CZGL'); // 替换为实际的数据接口地址
             const data = await response.json();
             renderTable(data);
         } catch (error) {

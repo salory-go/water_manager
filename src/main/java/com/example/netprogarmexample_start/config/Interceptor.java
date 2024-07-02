@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSONObject;
-
 import com.example.netprogarmexample_start.result.CommonResult;
 import com.example.netprogarmexample_start.utils.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +24,6 @@ public class Interceptor implements HandlerInterceptor {
 
         //1.获取请求头中的令牌(token)
         String jwt = request.getHeader("token");
-        System.out.println(jwt);
 
         //2.判断令牌是否存在,如果不存在,返回错误结果(不登陆)
         if(!StringUtils.hasLength(jwt)){
@@ -35,7 +33,6 @@ public class Interceptor implements HandlerInterceptor {
             String notLogin = JSONObject.toJSONString(error);
             response.getWriter().write(notLogin);
             return false;
-//            return true;
         }
 
         //3.解析token,如果解析失败,返回错误结果(不登陆)
@@ -49,7 +46,6 @@ public class Interceptor implements HandlerInterceptor {
             String notLogin = JSONObject.toJSONString(error);
             response.getWriter().write(notLogin);
             return false;
-//            return true;
         }
 
         //4.放行

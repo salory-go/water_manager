@@ -6,6 +6,7 @@
   <title>测站管理</title>
   <link rel="stylesheet" href="./css/title.css">
   <link rel="stylesheet" href="./layui-v2.9.3/layui/css/layui.css">
+  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -13,180 +14,222 @@
       padding: 0;
       text-align: center;
     }
-
-    #header {
-      background-color: #333;
-      color: #fff;
-      padding: 10px;
-    }
-
-    #content {
-      padding: 20px;
-    }
-
-    #image {
-      max-width: 100%;
-      height: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-
-    /*table, th, td {*/
-    /*  border: 1px solid #ddd;*/
-    /*}*/
-
-    /*th, td {*/
-    /*  padding: 10px;*/
-    /*  text-align: left;*/
-    /*}*/
-
-    th {
-      background-color: #333;
-      color: #fff;
-    }
   </style>
 </head>
 <body>
-<div id="header">
-<!--  <img id="image" src="your_image_url.jpg" alt="顶部图片">-->
-  <p>当前时间: <span id="current-time"></span></p>
+<div id="app">
+  <el-menu class="el-menu-demo" mode="horizontal" class="flex">
+    <el-menu-item index="1"><a href="1.html">测站基本信息表</a></el-menu-item>
+    <el-menu-item index="2"><a href="2.html">河流基本信息表</a></el-menu-item>
+    <el-menu-item index="3"><a href="3.html">水面蒸发量观测场表</a></el-menu-item>
+    <el-menu-item index="4"><a href="4.html">测站详细信息表</a></el-menu-item>
+  </el-menu>
+  <div id="clipped-title1">
+      <h1>测站管理</h1>
+  </div>
+  <div id="clipped-title3">
+      <h1>河流基本信息</h1>
+  </div>
+
+  <div style="text-align: right; margin-bottom: 10px;margin-right: 10px">
+    <el-button type="primary" icon="el-icon-plus" circle @click="addRow"></el-button>
+  </div>
+
+  <el-table :data="tableData" style="width: 100%" stripe border>
+    <el-table-column prop="hname" label="河流名称" fixed></el-table-column>
+    <el-table-column prop="code" label="河流编码"></el-table-column>
+    <el-table-column prop="lname" label="流域名称"></el-table-column>
+    <el-table-column prop="czname" label="测站名称"></el-table-column>
+    <el-table-column prop="name" label="水系名称"></el-table-column>
+    <el-table-column label="操作">
+      <template slot-scope="scope" width="120">
+        <el-button size="mini" type="danger" icon="el-icon-delete" circle
+                   @click="deleteRow(scope.row)"></el-button>
+        <el-button size="mini" type="primary" icon="el-icon-edit" circle
+                   @click="updateRow(scope.row)"></el-button>
+      </template>
+    </el-table-column>
+  </el-table>
 </div>
 
-<!-- 测站管理表格 -->
-<div id="content">
-  <div id="clipped-title1">
-    <h1>测站管理</h1>
-  </div>
-  <!-- 中间层标题 -->
-<!--  <p>这是测站管理页面的其他内容...</p>-->
-  <a href="1.html">测站基本信息表</a>
-  <a href="2.html">河流基本信息表</a>
-  <a href="3.html">水面蒸发量观测场表</a>
-  <a href="4.html">测站详细信息表</a>
-</div>
-<!-- 河流基本信息表格 -->
-<div id="riverContent">
-  <div id="clipped-title3">
-    <h1>河流基本信息</h1>
-  </div>
-  <!-- 河流基本信息表格 -->
-  <div style="text-align: right;">
-<!--    <button id="button" onclick="addRow()">添加</button>-->
-    <button type="button" class="layui-btn layui-btn-sm layui-btn-radius" onclick="addRow()">
-      <i class="layui-icon layui-icon-add-1"></i>
-    </button>
-  </div>
-  <table class="layui-table">
-    <thead>
-    <tr>
-      <th>河流名称</th>
-      <th>河流编码</th>
-      <th>流域名称</th>
-      <th>测站编码</th>
-      <th>水系名称</th>
-      <th></th>
-      <th>操作</th>
-    </tr>
-    </thead>
-    <tbody id="riverTableBody">
-    <!-- 数据将由 JavaScript 动态填充 -->
-    </tbody>
-  </table>
-</div>
+<script src="js/vue.js"></script>
+<script src="./js/element.js"></script>
 <script>
+  new Vue({
+    el: "#app",
+    data() {
+      return {
+        currentTime: '',
+        tableData: [],
+        activeIndex: 1
+      };
+    },
+    methods: {
+      addRow() {
+        window.location.href = 'add.html';
+      },
+      deleteRow(row) {
+        fetch(`http://localhost:8080/HL/${row.code}`, {
+          method: 'DELETE'
+        }).then(() => {
+          this.fetchData();
+        });
+      },
+      updateRow(row) {
+        const params = new URLSearchParams(row).toString();
+        console.log(params);
+        this.$message.error('没写捏🤯');
+        // window.location.href = `update.html?${params}`;
+      },
+      fetchData() {
+        fetch('http://localhost:8080/HL')
+                .then(response => response.json())
+                .then(data => {
+                  this.tableData = data;
+                  console.log(data);
+                })
+                .catch(error => console.error('Error fetching data:', error));
+      },
+      getCurrentTime() {
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        const seconds = now.getSeconds().toString().padStart(2, '0');
+        return `${hours}:${minutes}:${seconds}`;
+      },
+      updateCurrentTime() {
+        this.currentTime = this.getCurrentTime();
+      }
+    },
+    mounted() {
+      this.fetchData();
+      this.updateCurrentTime();
+      this.activeIndex = 1;
+    }
+  });
   // 获取当前时间
-  function getCurrentTime() {
-    const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    const seconds = now.getSeconds();
-    return `${hours}:${minutes}:${seconds}`;
-  }
+  // function getCurrentTime() {
+  //   const now = new Date();
+  //   const hours = now.getHours();
+  //   const minutes = now.getMinutes();
+  //   const seconds = now.getSeconds();
+  //   return `${hours}:${minutes}:${seconds}`;
+  // }
 
   // 更新时间显示
-  function updateCurrentTime() {
-    const currentTimeElement = document.getElementById('current-time');
-    if (currentTimeElement) {
-      currentTimeElement.textContent = getCurrentTime();
-    }
-  }
+  // function updateCurrentTime() {
+  //   const currentTimeElement = document.getElementById('current-time');
+  //   if (currentTimeElement) {
+  //     currentTimeElement.textContent = getCurrentTime();
+  //   }
+  // }
 
   // 更新时间每秒钟
-  setInterval(updateCurrentTime, 1000);
+  // setInterval(updateCurrentTime, 1000);
 
   // 异步请求数据并渲染表格
-  function fetchDataAndRenderTable() {
-    fetch('http://localhost:8080/HL') // 替换为实际的数据接口地址
-            .then(response => response.json())
-            .then(data => renderTable(data))
-            .catch(error => console.error('Error fetching data:', error));
-  }
+  // function fetchDataAndRenderTable() {
+  //   fetch('http://localhost:8080/HL') // 替换为实际的数据接口地址
+  //           .then(response => response.json())
+  //           .then(data => renderTable(data))
+  //           .catch(error => console.error('Error fetching data:', error));
+  // }
 
   // 渲染表格
-  function renderTable(data) {
-    const tbody = document.querySelector('tbody');
-
-    // 清空原有数据
-    tbody.innerHTML = '';
-
-    // 遍历数据并插入新的行
-    data.forEach(rowData => {
-      const row = document.createElement('tr');
-
-      // 创建单元格并插入数据
-      for (const key in rowData) {
-        const cell = document.createElement('td');
-        cell.textContent = rowData[key];
-        row.appendChild(cell);
-      }
+  // function renderTable(data) {
+  //   const tbody = document.querySelector('tbody');
+  //
+  //   // 清空原有数据
+  //   tbody.innerHTML = '';
+  //
+  //   // 遍历数据并插入新的行
+  //   data.forEach(rowData => {
+  //     const row = document.createElement('tr');
+  //
+  //     // 创建单元格并插入数据
+  //     for (const key in rowData) {
+  //       const cell = document.createElement('td');
+  //       cell.textContent = rowData[key];
+  //       row.appendChild(cell);
+  //     }
 
       // 添加复选框列
-      const checkboxCell = document.createElement('td');
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkboxCell.appendChild(checkbox);
-      row.appendChild(checkboxCell);
-
-      // 添加操作列
-      const actionCell = document.createElement('td');
+      // const checkboxCell = document.createElement('td');
+      // const checkbox = document.createElement('input');
+      // checkbox.type = 'checkbox';
+      // checkboxCell.appendChild(checkbox);
+      // row.appendChild(checkboxCell);
+      //
+      // // 添加操作列
+      // const actionCell = document.createElement('td');
 
       // 添加“删除”按钮
-      const deleteButton = document.createElement('button');
-      deleteButton.innerHTML = '<i class="layui-icon layui-icon-delete"></i>';
-      const cls_del = ["layui-btn","layui-btn-sm","layui-btn-radius","layui-btn-danger"];
-      deleteButton.classList.add(...cls_del);
-      deleteButton.type="button";
-      deleteButton.onclick = function () {
-        // 添加相应的删除逻辑
-        deleteRow(rowData);
-
-      };
-      actionCell.appendChild(deleteButton);
-
-      // 添加“修改”按钮
-      const updateButton = document.createElement('button');
-      updateButton.innerHTML = '<i class="layui-icon layui-icon-edit"></i>';
-      const cls_edit = ["layui-btn","layui-btn-sm","layui-btn-radius","layui-btn-normal"];
-      updateButton.classList.add(...cls_edit);
-      updateButton.type="button";
-      updateButton.onclick = function () {
-        // 添加相应的修改逻辑
-        updateRow(rowData);
-        // console.log(rowData);
-      };
-      actionCell.appendChild(updateButton);
-      row.appendChild(actionCell);
-      tbody.appendChild(row);
-    });
-  }
-
-  // 初始化页面时加载数据
-  fetchDataAndRenderTable();
+  //     const deleteButton = document.createElement('button');
+  //     deleteButton.innerHTML = '<i class="layui-icon layui-icon-delete"></i>';
+  //     const cls_del = ["layui-btn","layui-btn-sm","layui-btn-radius","layui-btn-danger"];
+  //     deleteButton.classList.add(...cls_del);
+  //     deleteButton.type="button";
+  //     deleteButton.onclick = function () {
+  //       // 添加相应的删除逻辑
+  //       deleteRow(rowData);
+  //
+  //     };
+  //     actionCell.appendChild(deleteButton);
+  //
+  //     // 添加“修改”按钮
+  //     const updateButton = document.createElement('button');
+  //     updateButton.innerHTML = '<i class="layui-icon layui-icon-edit"></i>';
+  //     const cls_edit = ["layui-btn","layui-btn-sm","layui-btn-radius","layui-btn-normal"];
+  //     updateButton.classList.add(...cls_edit);
+  //     updateButton.type="button";
+  //     updateButton.onclick = function () {
+  //       // 添加相应的修改逻辑
+  //       updateRow(rowData);
+  //       // console.log(rowData);
+  //     };
+  //     actionCell.appendChild(updateButton);
+  //     row.appendChild(actionCell);
+  //     tbody.appendChild(row);
+  //   });
+  // }
+  //
+  // // 初始化页面时加载数据
+  // fetchDataAndRenderTable();
 </script>
 
 </body>
 </html>
+
+<!--    &lt;!&ndash; 测站管理表格 &ndash;&gt;-->
+<!--<div id="content">-->
+<!--&lt;!&ndash;  <div id="clipped-title1">&ndash;&gt;-->
+<!--&lt;!&ndash;    <h1>测站管理</h1>&ndash;&gt;-->
+<!--&lt;!&ndash; 河流基本信息表格 &ndash;&gt;-->
+<!--<div id="riverContent">-->
+<!--&lt;!&ndash;  <div id="clipped-title3">&ndash;&gt;-->
+<!--&lt;!&ndash;    <h1>河流基本信息</h1>&ndash;&gt;-->
+<!--&lt;!&ndash;  </div>&ndash;&gt;-->
+<!--  &lt;!&ndash; 河流基本信息表格 &ndash;&gt;-->
+<!--  <div style="text-align: right;">-->
+<!--&lt;!&ndash;    <button id="button" onclick="addRow()">添加</button>&ndash;&gt;-->
+<!--    <button type="button" class="layui-btn layui-btn-sm layui-btn-radius" onclick="addRow()">-->
+<!--      <i class="layui-icon layui-icon-add-1"></i>-->
+<!--    </button>-->
+<!--  </div>-->
+<!--  <table class="layui-table">-->
+<!--    <thead>-->
+<!--    <tr>-->
+<!--      <th>河流名称</th>-->
+<!--      <th>河流编码</th>-->
+<!--      <th>流域名称</th>-->
+<!--      <th>测站编码</th>-->
+<!--      <th>水系名称</th>-->
+<!--      <th></th>-->
+<!--      <th>操作</th>-->
+<!--    </tr>-->
+<!--    </thead>-->
+<!--    <tbody id="riverTableBody">-->
+<!--    &lt;!&ndash; 数据将由 JavaScript 动态填充 &ndash;&gt;-->
+<!--    </tbody>-->
+<!--  </table>-->
+<!--</div>-->

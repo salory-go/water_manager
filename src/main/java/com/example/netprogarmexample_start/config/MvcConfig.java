@@ -19,9 +19,7 @@ public class MvcConfig implements WebMvcConfigurer {
         List<String> pathList = new ArrayList<String>();
         pathList.add("/login");
         pathList.add("/login.html");
-        registry.addInterceptor(interceptor).addPathPatterns("/**").excludePathPatterns(pathList);
     }
-
 }
 
 //@Configuration
@@ -30,7 +28,6 @@ public class MvcConfig implements WebMvcConfigurer {
 //    @Override
 //    public void addInterceptors(InterceptorRegistry registry){
 //        registry.addInterceptor(new Interceptor()).excludePathPatterns("/login.html");
-//        registry.addInterceptor(new Interceptor()).excludePathPatterns();
 //    }
 //
 //}

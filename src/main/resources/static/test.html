@@ -1,128 +1,116 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>测站管理</title>
-    <link rel="stylesheet" href="./css/title.css">
-    <link rel="stylesheet" href="./layui-v2.9.3/layui/css/layui.css">
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-    <!--  <link rel="stylesheet" href="./css/element.css">-->
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-        }
-
-        .flex {
-            display: flex;
-        }
-    </style>
+    <title>表格输入页面</title>
 </head>
 <body>
-<div id="app">
-<!--    <div id="header">-->
-<!--        <p>当前时间: <span>{{ currentTime }}</span></p>-->
-<!--    </div>-->
-    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" class="flex">
-        <el-menu-item index="1"><a href="1.html">测站基本信息表</a></el-menu-item>
-        <el-menu-item index="2"><a href="2.html">河流基本信息表</a></el-menu-item>
-        <el-menu-item index="3"><a href="3.html">水面蒸发量观测场表</a></el-menu-item>
-        <el-menu-item index="4"><a href="4.html">测站详细信息表</a></el-menu-item>
-    </el-menu>
-    <div id="clipped-title1">
-        <h1>测站管理</h1>
-    </div>
-    <el-link href="1.html">测站基本信息表</el-link>
-    <el-link href="2.html">河流基本信息表</el-link>
-    <el-link href="3.html">水面蒸发量观测场表</el-link>
-    <el-link href="4.html">测站详细信息表</el-link>
 
-    <div id="clipped-title2">
-        <h1>测站基本信息</h1>
-    </div>
+<h2>表格输入</h2>
 
-    <div style="text-align: right;">
-        <el-button type="primary" icon="el-icon-edit" circle @click="addRow"></el-button>
-    </div>
-
-    <el-table :data="tableData" style="width: 100%" stripe>
-        <el-table-column prop="name" label="测站名称" fixed width="150"></el-table-column>
-        <el-table-column prop="code" label="测站编码"></el-table-column>
-        <el-table-column prop="address" label="站址" width="200"></el-table-column>
-        <el-table-column prop="startTime" label="开始时间"></el-table-column>
-        <el-table-column prop="endTime" label="结束时间"></el-table-column>
-        <el-table-column prop="waterName" label="河流编码"></el-table-column>
-        <el-table-column prop="type" label="测站类型"></el-table-column>
-        <el-table-column prop="e" label="东经"></el-table-column>
-        <el-table-column prop="w" label="北纬"></el-table-column>
-        <el-table-column label="操作">
-            <template slot-scope="scope">
-                <el-button size="mini" type="danger" icon="el-icon-delete" circle
-                           @click="deleteRow(scope.row)"></el-button>
-                <el-button size="mini" type="primary" icon="el-icon-edit" circle
-                           @click="updateRow(scope.row)"></el-button>
-            </template>
-        </el-table-column>
-    </el-table>
-</div>
-
-<!--<script src="https://unpkg.com/vue@2/dist/vue.js"></script>-->
-<script src="js/vue.js"></script>
-<!--<script src="https://unpkg.com/element-ui/lib/index.js"></script>-->
-<script src="./js/element.js"></script>
+<!-- 获取前一个页面传递的数据 -->
 <script>
-    new Vue({
-        el: "#app",
-        data() {
-            return {
-                currentTime: '',
-                tableData: [],
-                activeIndex: 1
-            };
-        },
-        methods: {
-            addRow() {
-                window.location.href = 'add.html';
-            },
-            deleteRow(row) {
-                fetch(`http://localhost:8080/CZ/${row.code}`, {
-                    method: 'DELETE'
-                }).then(() => {
-                    this.fetchData();
-                });
-            },
-            updateRow(row) {
-                const params = new URLSearchParams(row).toString();
-                window.location.href = `update.html?${params}`;
-            },
-            fetchData() {
-                fetch('http://localhost:8080/CZ')
-                    .then(response => response.json())
-                    .then(data => {
-                        this.tableData = data;
-                    })
-                    .catch(error => console.error('Error fetching data:', error));
-            },
-            getCurrentTime() {
-                const now = new Date();
-                const hours = now.getHours().toString().padStart(2, '0');
-                const minutes = now.getMinutes().toString().padStart(2, '0');
-                const seconds = now.getSeconds().toString().padStart(2, '0');
-                return `${hours}:${minutes}:${seconds}`;
-            },
-            updateCurrentTime() {
-                this.currentTime = this.getCurrentTime();
-            }
-        },
-        mounted() {
-            this.fetchData();
-            this.updateCurrentTime();
-            setInterval(this.updateCurrentTime, 1000);
-        }
+    // 获取URL参数的函数
+    function getUrlParameter(name) {
+        name = name.replace(/[[]/, '\\[').replace(/[\]]/, '\\]');
+        const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        const results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    }
+
+    // 在页面加载时获取传递的数据
+    const previousData = {
+        name: getUrlParameter('name'),
+        code: getUrlParameter('code'),
+        address: getUrlParameter('address'),
+        startTime: getUrlParameter('startTime'),
+        endTime: getUrlParameter('endTime'),
+        waterName: getUrlParameter('waterName'),
+        type: getUrlParameter('type'),
+        E: getUrlParameter('e'),
+        W: getUrlParameter('w'),
+        // 其他数据字段
+    };
+
+    // 在控制台输出获取到的数据（可选）
+    console.log('Previous Data:', previousData);
+
+    // 在输入框中填充数据
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('name').value = previousData.name;
+        // document.getElementById('code').value = previousData.code;
+        document.getElementById('code').innerText = previousData.code;
+        document.getElementById('address').value = previousData.address;
+        document.getElementById('startTime').value = previousData.startTime;
+        document.getElementById('endTime').value = previousData.endTime;
+        document.getElementById('waterName').value = previousData.waterName;
+        document.getElementById('type').value = previousData.type;
+        document.getElementById('e').value = previousData.E;
+        document.getElementById('w').value = previousData.W;
+        // 填充其他输入框的代码
     });
 </script>
+
+
+<form id="stationForm">
+    <table>
+        <tr>
+            <th>测站名称</th>
+            <th>测站编码</th>
+            <th>站址</th>
+            <th>开始时间</th>
+            <th>结束时间</th>
+            <th>河流编码</th>
+            <th>测站类型</th>
+            <th>东经</th>
+            <th>北纬</th>
+        </tr>
+        <tr>
+            <!-- 将前一个页面传递的数据显示在输入框中 -->
+            <td><input id="name" type="text" name="name" value="${previousData.name}" required></td>
+            <!--            <td><input id="code" type="text" name="code" value="${previousData.code}" required></td>-->
+            <td><span id="code" type="text"></span></td>
+            <td><input id="address" type="text" name="address" value="${previousData.address}" required></td>
+            <td><input id="startTime" type="text" name="startTime" value="${previousData.startTime}" required></td>
+            <td><input id="endTime" type="text" name="endTime" value="${previousData.endTime}" required></td>
+            <td><input id="waterName" type="text" name="waterName" value="${previousData.waterName}" required></td>
+            <td><input id="type" type="text" name="type" value="${previousData.type}" required></td>
+            <td><input id="e"  type="text" name="e" value="${previousData.e}" required></td>
+            <td><input id="w"  type="text" name="w" value="${previousData.w}" required></td>
+        </tr>
+    </table>
+
+    <button type="button" onclick="submitForm()">提交</button>
+</form>
+
+<script>
+    function submitForm() {
+        // 获取表单数据
+        const formData = new FormData(document.getElementById('stationForm'));
+        formData.set("code",previousData.code)
+        // 发送 POST 请求
+        fetch('http://localhost:8080/CZ', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(Object.fromEntries(formData)),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error submitting form`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // 处理成功的响应
+                console.log('Form submitted successfully:', data);
+                window.location.href = `1.html`;
+            })
+            .catch(error => console.error('Error submitting form:', error));
+    }
+</script>
+
 </body>
 </html>

@@ -4,112 +4,116 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>表格输入页面</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
 
-<h2>表格输入</h2>
-
-<!-- 获取前一个页面传递的数据 -->
-<script>
-    // 获取URL参数的函数
-    function getUrlParameter(name) {
-        name = name.replace(/[[]/, '\\[').replace(/[\]]/, '\\]');
-        const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-        const results = regex.exec(location.search);
-        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-    }
-
-    // 在页面加载时获取传递的数据
-    const previousData = {
-        name: getUrlParameter('name'),
-        code: getUrlParameter('code'),
-        address: getUrlParameter('address'),
-        startTime: getUrlParameter('startTime'),
-        endTime: getUrlParameter('endTime'),
-        waterName: getUrlParameter('waterName'),
-        type: getUrlParameter('type'),
-        E: getUrlParameter('e'),
-        W: getUrlParameter('w'),
-        // 其他数据字段
-    };
-
-    // 在控制台输出获取到的数据（可选）
-    console.log('Previous Data:', previousData);
-
-    // 在输入框中填充数据
-    document.addEventListener('DOMContentLoaded', function () {
-        document.getElementById('name').value = previousData.name;
-        // document.getElementById('code').value = previousData.code;
-        document.getElementById('code').innerText = previousData.code;
-        document.getElementById('address').value = previousData.address;
-        document.getElementById('startTime').value = previousData.startTime;
-        document.getElementById('endTime').value = previousData.endTime;
-        document.getElementById('waterName').value = previousData.waterName;
-        document.getElementById('type').value = previousData.type;
-        document.getElementById('e').value = previousData.E;
-        document.getElementById('w').value = previousData.W;
-        // 填充其他输入框的代码
-    });
-</script>
-
-
-<form id="stationForm">
-    <table>
-        <tr>
-            <th>测站名称</th>
-            <th>测站编码</th>
-            <th>站址</th>
-            <th>开始时间</th>
-            <th>结束时间</th>
-            <th>河流编码</th>
-            <th>测站类型</th>
-            <th>东经</th>
-            <th>北纬</th>
-        </tr>
-        <tr>
-            <!-- 将前一个页面传递的数据显示在输入框中 -->
-            <td><input id="name" type="text" name="name" value="${previousData.name}" required></td>
-<!--            <td><input id="code" type="text" name="code" value="${previousData.code}" required></td>-->
-            <td><span id="code" type="text"></span></td>
-            <td><input id="address" type="text" name="address" value="${previousData.address}" required></td>
-            <td><input id="startTime" type="text" name="startTime" value="${previousData.startTime}" required></td>
-            <td><input id="endTime" type="text" name="endTime" value="${previousData.endTime}" required></td>
-            <td><input id="waterName" type="text" name="waterName" value="${previousData.waterName}" required></td>
-            <td><input id="type" type="text" name="type" value="${previousData.type}" required></td>
-            <td><input id="e"  type="text" name="e" value="${previousData.e}" required></td>
-            <td><input id="w"  type="text" name="w" value="${previousData.w}" required></td>
-        </tr>
-    </table>
-
-    <button type="button" onclick="submitForm()">提交</button>
-</form>
+<div id="app">
+    <el-container>
+        <el-header>
+            <h2>表格输入</h2>
+        </el-header>
+        <el-main>
+            <el-form ref="form" :model="form" label-width="120px">
+                <el-form-item label="测站名称">
+                    <el-input v-model="form.name"></el-input>
+                </el-form-item>
+                <el-form-item label="测站编码">
+                    <el-input v-model="form.code" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="站址">
+                    <el-input v-model="form.address"></el-input>
+                </el-form-item>
+                <el-form-item label="开始时间">
+                    <el-input v-model="form.startTime"></el-input>
+                </el-form-item>
+                <el-form-item label="结束时间">
+                    <el-input v-model="form.endTime"></el-input>
+                </el-form-item>
+                <el-form-item label="河流编码">
+                    <el-input v-model="form.waterName"></el-input>
+                </el-form-item>
+                <el-form-item label="测站类型">
+                    <el-input v-model="form.type"></el-input>
+                </el-form-item>
+                <el-form-item label="东经">
+                    <el-input v-model="form.e"></el-input>
+                </el-form-item>
+                <el-form-item label="北纬">
+                    <el-input v-model="form.w"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submitForm">提交</el-button>
+                </el-form-item>
+            </el-form>
+        </el-main>
+    </el-container>
+</div>
 
 <script>
-    function submitForm() {
-        // 获取表单数据
-        const formData = new FormData(document.getElementById('stationForm'));
-        formData.set("code",previousData.code)
-        // 发送 POST 请求
-        fetch('http://localhost:8080/CZ', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(Object.fromEntries(formData)),
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Error submitting form`);
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                form: {
+                    name: '',
+                    code: '',
+                    address: '',
+                    startTime: '',
+                    endTime: '',
+                    waterName: '',
+                    type: '',
+                    e: '',
+                    w: ''
                 }
-                return response.json();
-            })
-            .then(data => {
-                // 处理成功的响应
-                console.log('Form submitted successfully:', data);
-                window.location.href = `1.html`;
-            })
-            .catch(error => console.error('Error submitting form:', error));
-    }
+            };
+        },
+        created() {
+            // 获取URL参数的函数
+            function getUrlParameter(name) {
+                name = name.replace(/[[]/, '\\[').replace(/[\]]/, '\\]');
+                const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+                const results = regex.exec(location.search);
+                return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+            }
+
+            // 在页面加载时获取传递的数据
+            this.form = {
+                name: getUrlParameter('name'),
+                code: getUrlParameter('code'),
+                address: getUrlParameter('address'),
+                startTime: getUrlParameter('startTime'),
+                endTime: getUrlParameter('endTime'),
+                waterName: getUrlParameter('waterName'),
+                type: getUrlParameter('type'),
+                e: getUrlParameter('e'),
+                w: getUrlParameter('w'),
+            };
+        },
+        methods: {
+            submitForm() {
+                axios.post('http://localhost:8080/CZ', this.form, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                    .then(response => {
+                        if (response.status === 200) {
+                            window.location.href = '1.html';
+                        } else {
+                            this.$message.error('提交失败');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error submitting form:', error);
+                        this.$message.error('提交失败');
+                    });
+            }
+        }
+    });
 </script>
 
 </body>

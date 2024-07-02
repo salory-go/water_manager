@@ -11,10 +11,12 @@ import java.util.Date;
  * 创建时间:2024/1/11 18:42
  * 描述:
  **/
+
+//水面蒸发过程采样规表
 @Data
 public class WaterEP {
-    private String STCD;
-    private String HYEVEA;
-    private Date CHDAY;
-    private String NT;
+    private String STCD;    //测站编码
+    private String HYEVEA;  //水文事件区
+    private Date CHDAY; //变化日期
+    private String NT;  //备注
 }

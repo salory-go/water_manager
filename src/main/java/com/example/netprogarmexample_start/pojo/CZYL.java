@@ -10,14 +10,16 @@ import org.springframework.context.annotation.Bean;
  * 创建时间:2024/1/11 18:32
  * 描述:
  **/
+
+//测站预览
 @Data
 public class CZYL {
-    private String STCD;
+    private String STCD;    //测站编码
 
-    private String STNM;
+    private String STNM;    //测站名称
 
-    private String STTP;
+    private String STTP;    //测站类型
 
-    private String NT;
+    private String NT;  //备注
 
 }

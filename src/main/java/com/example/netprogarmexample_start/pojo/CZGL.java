@@ -15,18 +15,17 @@ import java.util.Date;
  **/
 
 // 测站管理
-
 @Data
 public class CZGL {
-    private String STNM;
-    private String STCD;
-    private Date BGTM;
-    private Date ENDTM;
-    private String RVCD;
-    private String ADDVCD;
-    private String WRRGCD;
-    private String WFRCD;
-    private String ADMNSTCD;
-    private String MNAG;
-    private String NT;
+    private String STNM;    //测站名称
+    private String STCD;    //测站编码
+    private Date BGTM;  //开始时间
+    private Date ENDTM; //结束时间
+    private String RVCD;    //河流编码
+    private String ADDVCD;  //行政编码
+    private String WRRGCD;  //水资源编码
+    private String WFRCD;   //水功能区编码
+    private String ADMNSTCD;    //行政区编码
+    private String MNAG;    //管理机构编码
+    private String NT;  //备注
 }

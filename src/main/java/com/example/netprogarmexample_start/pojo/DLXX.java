@@ -12,11 +12,13 @@ import java.math.BigDecimal;
  * 创建时间:2024/1/11 18:34
  * 描述:
  **/
+
+//测站地理信息
 @Data
 public class DLXX {
-    private String STCD;
-    private String STLC;
+    private String STCD;    //测站编码
+    private String STLC;    //测站位置
     private String NT;
-    private BigDecimal LGTD;
-    private BigDecimal LTTD;
+    private BigDecimal LGTD;    //纬度
+    private BigDecimal LTTD;    //经度
 }

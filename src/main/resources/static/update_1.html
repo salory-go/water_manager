@@ -17,32 +17,48 @@
             <h2>表格输入</h2>
         </el-header>
         <el-main>
-            <el-form ref="form" :model="form" label-width="120px">
-                <el-form-item label="测站名称">
+            <el-form ref="form" :rules="rules" :model="form" label-width="120px">
+                <el-form-item label="测站名称" prop="name">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
                 <el-form-item label="测站编码">
                     <el-input v-model="form.code" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="站址">
+                <el-form-item label="站址" prop="address">
                     <el-input v-model="form.address"></el-input>
                 </el-form-item>
-                <el-form-item label="开始时间">
-                    <el-input v-model="form.startTime"></el-input>
+                <el-form-item label="开始时间" prop="startTime">
+                    <el-date-picker
+                            v-model="form.startTime"
+                            align="right"
+                            type="date"
+                            value-format="yyyy-MM-dd"
+                            placeholder="选择日期"
+                            :picker-options="pickerOptions">
+                    </el-date-picker>
+<!--                    <el-input v-model="form.startTime"></el-input>-->
                 </el-form-item>
-                <el-form-item label="结束时间">
-                    <el-input v-model="form.endTime"></el-input>
+                <el-form-item label="结束时间" prop="endTime">
+                    <el-date-picker
+                            v-model="form.endTime"
+                            align="right"
+                            type="date"
+                            value-format="yyyy-MM-dd"
+                            placeholder="选择日期"
+                            :picker-options="pickerOptions">
+                    </el-date-picker>
+<!--                    <el-input v-model="form.endTime"></el-input>-->
                 </el-form-item>
                 <el-form-item label="河流编码">
-                    <el-input v-model="form.waterName"></el-input>
+                    <el-input v-model="form.waterName" disabled></el-input>
                 </el-form-item>
-                <el-form-item label="测站类型">
+                <el-form-item label="测站类型" prop="type">
                     <el-input v-model="form.type"></el-input>
                 </el-form-item>
-                <el-form-item label="东经">
+                <el-form-item label="东经" prop="e">
                     <el-input v-model="form.e"></el-input>
                 </el-form-item>
-                <el-form-item label="北纬">
+                <el-form-item label="纬度" prop="w">
                     <el-input v-model="form.w"></el-input>
                 </el-form-item>
                 <el-form-item>
@@ -68,6 +84,49 @@
                     type: '',
                     e: '',
                     w: ''
+                },
+                rules:{
+                    name: [
+                        { required: true, message: '请输入测站名称', trigger: 'blur' },
+                        { max: 30, message: '长度须小于30字符', trigger: 'blur' }
+                    ],
+                    address: [
+                        { max: 50, message: '测站位置最长为50个字符', trigger: 'blur' }
+                    ],
+                    type: [
+                        { min:4, max: 4, message: '测站类型须为4个字符', trigger: 'blur' },
+                        { validator: (rule, value, callback) => {
+                                if (isNaN(Number(value))) {
+                                    callback(new Error('测站类型必须为数字'));
+                                }else {
+                                    callback()
+                                }
+                            }, trigger: 'blur' }
+                    ],
+                    e: [
+                        // { type: 'number', message: '东经必须为数字', trigger: 'blur' },
+                        { validator: (rule, value, callback) => {
+                                if (isNaN(Number(value))) {
+                                    callback(new Error('经度必须为数字'));
+                                } else if (Number(value) !== '' && (Number(value) < 0 || Number(value) > 180)) {
+                                    callback(new Error('东经范围为 0 到 180 之间'))
+                                } else {
+                                    callback()
+                                }
+                            }, trigger: 'blur' }
+                    ],
+                    w: [
+                        // { type: 'number', message: '纬度必须为数字', trigger: 'blur' },
+                        { validator: (rule, value, callback) => {
+                                if (isNaN(Number(value))) {
+                                    callback(new Error('维度必须为数字'));
+                                } else if (Number(value) !== '' && (Number(value) < -90 || Number(value) > 90)) {
+                                    callback(new Error('纬度范围为 -90 到 90 之间'))
+                                } else {
+                                    callback()
+                                }
+                            }, trigger: 'blur' }
+                    ],
                 }
             };
         },
@@ -118,3 +177,47 @@
 
 </body>
 </html>
+
+
+
+<!--
+rules:{
+                    name: [
+                        { required: true, message: '请输入测站名称', trigger: 'blur' },
+                        { max: 30, message: '长度须小于30字符', trigger: 'blur' }
+                    ],
+                    code: [
+                        { required: true, message: '请输入测站编码', trigger: 'blur' },
+                        { min: 8, max: 8, message: '测站编码长度为 8个字符', trigger: 'blur' }
+                    ],
+                    address: [
+                        { max: 50, message: '测站位置最长为 50 个字符', trigger: 'blur' }
+                    ],
+                    waterName: [
+                        { required: true, message: '请输入河流编码', trigger: 'blur' },
+                        { min: 8, max: 8, message: '河流编码长度为 8 个字符', trigger: 'blur' }
+                    ],
+                    type: [
+                        { max: 4, message: '测站类型最长为 4 个字符', trigger: 'blur' }
+                    ],
+                    e: [
+                        { type: 'number', message: '东经必须为数字', trigger: 'blur' },
+                        { validator: (rule, value, callback) => {
+                                if (value !== '' && (value < 0 || value > 180)) {
+                                    callback(new Error('东经范围为 0 到 180 之间'))
+                                } else {
+                                    callback()
+                                }
+                            }, trigger: 'blur' }
+                    ],
+                    w: [
+                        { type: 'number', message: '纬度必须为数字', trigger: 'blur' },
+                        { validator: (rule, value, callback) => {
+                                if (value !== '' && (value < -90 || value > 90)) {
+                                    callback(new Error('纬度范围为 -90 到 90 之间'))
+                                } else {
+                                    callback()
+                                }
+                            }, trigger: 'blur' }
+                    ],
+-->

@@ -36,14 +36,15 @@
     </div>
 
     <el-table :data="tableData" style="width: 100%" stripe border>
-        <el-table-column prop="stcd" label="测站编码" fixed></el-table-column>
+        <el-table-column prop="stnm" label="测站名称" fixed></el-table-column>
+        <el-table-column prop="stcd" label="测站编码"></el-table-column>
         <el-table-column prop="bgtm" label="开始时间"></el-table-column>
         <el-table-column prop="endtm" label="结束时间"></el-table-column>
         <el-table-column prop="rvcd" label="河流编码"></el-table-column>
-        <el-table-column prop="addvcd" label="ADDVCD"></el-table-column>
-        <el-table-column prop="wrrgcd" label="WRRGCD"></el-table-column>
-        <el-table-column prop="admnstcd" label="ADMNSTCD"></el-table-column>
-        <el-table-column prop="mnag" label="MNAG"></el-table-column>
+        <el-table-column prop="addvcd" label="行政区编码"></el-table-column>
+        <el-table-column prop="wrrgcd" label="水资源编码"></el-table-column>
+        <el-table-column prop="admnstcd" label="行政区管理编码"></el-table-column>
+        <el-table-column prop="mnag" label="管理机构编码"></el-table-column>
         <el-table-column label="操作" width="120">
             <template slot-scope="scope">
                 <el-button size="mini" type="danger" icon="el-icon-delete" circle

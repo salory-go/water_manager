@@ -7,6 +7,7 @@ import com.example.netprogarmexample_start.pojo.ZF;
 import org.apache.ibatis.annotations.*;
 import org.w3c.dom.ls.LSException;
 
+import java.sql.DriverPropertyInfo;
 import java.util.List;
 
 /**
@@ -115,6 +116,9 @@ public interface IMapper {
             "JOIN\n" +
             "    czylb c ON b.STCD = c.STCD\n")
     List<ZF> getZF();
+
+    @Select("select STNM from czylb where STCD = #{stcd}")
+    String getCZByCD(@Param("stcd")String stcd);
 //
 
 

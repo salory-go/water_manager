@@ -31,45 +31,37 @@ public class indexController {
 
     @GetMapping("/CZ")
     @ResponseBody
-    public List<CZ> test1(){
-//        System.out.println(mapper.getCZ());
+    public List<CZ> getCZs(){
         return mapper.getCZ();
     }
 
     @GetMapping("/CZGL")
     @ResponseBody
-    public List<CZGL> getCZGL(){
-        return mapper.getCZGL();
+    public List<CZGL> getCZGLs(){
+        List<CZGL> list = mapper.getCZGL();
+        for (CZGL czgl : list) {
+            String STCD = czgl.getSTCD();
+            String name = mapper.getCZByCD(STCD);
+            czgl.setSTNM(name);
+        }
+        return list;
     }
 
     @DeleteMapping("/CZ/{code}")
     @ResponseBody
     public Result delete(@PathVariable String code){
-        System.out.println(code.getClass());
-        System.out.println(mapper.delete(code));
         return new Result("200",null,null);
     }
 
     @PostMapping("/CZ")
     @ResponseBody
     public Result update(@RequestBody CZ cz){
-        System.out.println(cz);
-        System.out.println(mapper.updateCZ1(cz));
-        System.out.println(mapper.updateCZ2(cz));
-        System.out.println(mapper.updateCZ3(cz));
         return new Result("200",null,null);
     }
 
     @PostMapping("/CZ/add")
     @ResponseBody
     public Result add(@RequestBody CZ cz){
-        System.out.println(cz);
-        System.out.println(mapper.addCZ1(cz));
-        System.out.println(mapper.addCZ2(cz));
-        System.out.println(mapper.addCZ3(cz));
-        System.out.println(mapper.addCZ4(cz));
-
-
         return new Result("200",null,null);
     }
 
@@ -77,15 +69,13 @@ public class indexController {
 
     @GetMapping("/HL")
     @ResponseBody
-    public List<HL> test2(){
-        System.out.println(mapper.getHL());
+    public List<HL> getHLs(){
         return mapper.getHL();
     }
 
     @GetMapping("/ZF")
     @ResponseBody
-    public List<ZF> test3(){
-        System.out.println(mapper.getZF());
+    public List<ZF> getZFs(){
         return mapper.getZF();
     }
 

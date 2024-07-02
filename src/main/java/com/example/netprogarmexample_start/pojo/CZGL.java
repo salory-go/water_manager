@@ -18,6 +18,7 @@ import java.util.Date;
 
 @Data
 public class CZGL {
+    private String STNM;
     private String STCD;
     private Date BGTM;
     private Date ENDTM;

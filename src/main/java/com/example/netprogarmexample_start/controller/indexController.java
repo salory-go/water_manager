@@ -27,6 +27,8 @@ public class indexController {
     @Autowired
     IMapper mapper;
 
+    // 测站
+
     @GetMapping("/CZ")
     @ResponseBody
     public List<CZ> test1(){
@@ -46,20 +48,6 @@ public class indexController {
         System.out.println(code.getClass());
         System.out.println(mapper.delete(code));
         return new Result("200",null,null);
-    }
-
-    @GetMapping("/HL")
-    @ResponseBody
-    public List<HL> test2(){
-        System.out.println(mapper.getHL());
-        return mapper.getHL();
-    }
-
-    @GetMapping("/ZF")
-    @ResponseBody
-    public List<ZF> test3(){
-        System.out.println(mapper.getZF());
-        return mapper.getZF();
     }
 
     @PostMapping("/CZ")
@@ -84,4 +72,21 @@ public class indexController {
 
         return new Result("200",null,null);
     }
+
+    // 河流
+
+    @GetMapping("/HL")
+    @ResponseBody
+    public List<HL> test2(){
+        System.out.println(mapper.getHL());
+        return mapper.getHL();
+    }
+
+    @GetMapping("/ZF")
+    @ResponseBody
+    public List<ZF> test3(){
+        System.out.println(mapper.getZF());
+        return mapper.getZF();
+    }
+
 }

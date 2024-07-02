@@ -13,6 +13,9 @@ import java.util.Date;
  * 创建时间:2024/1/11 18:37
  * 描述:
  **/
+
+// 测站管理
+
 @Data
 public class CZGL {
     private String STCD;
@@ -25,5 +28,4 @@ public class CZGL {
     private String ADMNSTCD;
     private String MNAG;
     private String NT;
-
 }

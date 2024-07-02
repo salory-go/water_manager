@@ -5,92 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>表格输入页面</title>
 </head>
+<style>
+    .centered-button {
+        display: block;
+        margin: auto;
+        padding: 10px 20px; /* 调整按钮大小 */
+    }
+</style>
 <body>
 
 <h2>表格输入</h2>
 
-<!-- 获取前一个页面传递的数据 -->
-<script>
-    // 获取URL参数的函数
-    function getUrlParameter(name) {
-        name = name.replace(/[[]/, '\\[').replace(/[\]]/, '\\]');
-        const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-        const results = regex.exec(location.search);
-        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-    }
-
-    // 在页面加载时获取传递的数据
-    const previousData = {
-        name: getUrlParameter('name'),
-        code: getUrlParameter('code'),
-        address: getUrlParameter('address'),
-        startTime: getUrlParameter('startTime'),
-        endTime: getUrlParameter('endTime'),
-        waterName: getUrlParameter('waterName'),
-        type: getUrlParameter('type'),
-        E: getUrlParameter('e'),
-        W: getUrlParameter('w'),
-        // 其他数据字段
-    };
-
-    // 在控制台输出获取到的数据（可选）
-    console.log('Previous Data:', previousData);
-
-    // 在输入框中填充数据
-    document.addEventListener('DOMContentLoaded', function () {
-        document.getElementById('name').value = previousData.name;
-        // document.getElementById('code').value = previousData.code;
-        document.getElementById('code').innerText = previousData.code;
-        document.getElementById('address').value = previousData.address;
-        document.getElementById('startTime').value = previousData.startTime;
-        document.getElementById('endTime').value = previousData.endTime;
-        document.getElementById('waterName').value = previousData.waterName;
-        document.getElementById('type').value = previousData.type;
-        document.getElementById('e').value = previousData.E;
-        document.getElementById('w').value = previousData.W;
-        // 填充其他输入框的代码
-    });
-</script>
-
-
 <form id="stationForm">
-    <table>
+    <table class="centered-button">
         <tr>
             <th>测站名称</th>
+            <th>测站类型</th>
+        </tr>
+
+        <tr>
+            <!-- 将前一个页面传递的数据显示在输入框中 -->
+            <td><input id="name" type="text" name="name" required></td>
+
+            <td><input id="type" type="text" name="type" required></td>
+
+        </tr>
+        <tr>
+            <th>河流编码</th>
+            <th>河流名称</th>
+            <th>水系名称</th>
+        </tr>
+        <tr>
+            <td><input id="waterName" type="text" name="waterName" required></td>
+            <td><input id="riverName" type="text" name="riverName" required></td>
+            <td><input id="waterField" type="text" name="waterField" required></td>
+        </tr>
+        <tr>
             <th>测站编码</th>
             <th>站址</th>
-            <th>开始时间</th>
-            <th>结束时间</th>
-            <th>河流编码</th>
-            <th>测站类型</th>
             <th>东经</th>
             <th>北纬</th>
         </tr>
         <tr>
-            <!-- 将前一个页面传递的数据显示在输入框中 -->
-            <td><input id="name" type="text" name="name" value="${previousData.name}" required></td>
-            <!--            <td><input id="code" type="text" name="code" value="${previousData.code}" required></td>-->
-            <td><span id="code" type="text"></span></td>
-            <td><input id="address" type="text" name="address" value="${previousData.address}" required></td>
-            <td><input id="startTime" type="text" name="startTime" value="${previousData.startTime}" required></td>
-            <td><input id="endTime" type="text" name="endTime" value="${previousData.endTime}" required></td>
-            <td><input id="waterName" type="text" name="waterName" value="${previousData.waterName}" required></td>
-            <td><input id="type" type="text" name="type" value="${previousData.type}" required></td>
-            <td><input id="e"  type="text" name="e" value="${previousData.e}" required></td>
-            <td><input id="w"  type="text" name="w" value="${previousData.w}" required></td>
+            <td><input id="code" type="text" name="code" required></td>
+            <td><input id="address" type="text" name="address" required></td>
+            <td><input id="e"  type="text" name="e"  required></td>
+            <td><input id="w"  type="text" name="w"  required></td>
+
+        </tr>
+        <tr>
+            <th>开始时间</th>
+            <th>结束时间</th>
+            <th>行政区划码</th>
+        </tr>
+        <tr>
+            <td><input id="startTime" type="text" name="startTime"  required></td>
+            <td><input id="endTime" type="text" name="endTime"  required></td>
+            <td><input id="acd"  type="text" name="acd"  required></td>
         </tr>
     </table>
 
-    <button type="button" onclick="submitForm()">提交</button>
+
+
+    <button class="centered-button" type="button" onclick="submitForm()">提交</button>
+
 </form>
 
 <script>
     function submitForm() {
         // 获取表单数据
         const formData = new FormData(document.getElementById('stationForm'));
-        formData.set("code",previousData.code)
+        console.log(JSON.stringify(Object.fromEntries(formData)))
         // 发送 POST 请求
-        fetch('http://localhost:8080/CZ', {
+        fetch('http://localhost:8080/CZ/add', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

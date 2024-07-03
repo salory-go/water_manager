@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="./css/title.css">
     <link rel="stylesheet" href="./layui-v2.9.3/layui/css/layui.css">
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-    <!--  <link rel="stylesheet" href="./css/element.css">-->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -75,10 +74,25 @@
                 window.location.href = 'add.html';
             },
             deleteRow(row) {
-                fetch(`http://localhost:8080/CZ/${row.code}`, {
-                    method: 'DELETE'
+                this.$confirm('此操作将永久删除该测站信息, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
                 }).then(() => {
-                    this.fetchData();
+                    fetch(`http://localhost:8080/CZ/${row.code}`, {
+                        method: 'DELETE'
+                    }).then(() => {
+                        this.fetchData();
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                        });
+                    });
+                }).catch(() => {
+                    // this.$message({
+                    //     type: 'info',
+                    //     message: '已取消'
+                    // });
                 });
             },
             updateRow(row) {
@@ -93,16 +107,6 @@
                         console.log(data);
                     })
                     .catch(error => console.error('Error fetching data:', error));
-            },
-            getCurrentTime() {
-                const now = new Date();
-                const hours = now.getHours().toString().padStart(2, '0');
-                const minutes = now.getMinutes().toString().padStart(2, '0');
-                const seconds = now.getSeconds().toString().padStart(2, '0');
-                return `${hours}:${minutes}:${seconds}`;
-            },
-            updateCurrentTime() {
-                this.currentTime = this.getCurrentTime();
             }
         },
         mounted() {

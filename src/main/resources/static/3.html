@@ -71,11 +71,25 @@
                 window.location.href = 'add.html';
             },
             deleteRow(row) {
-                console.log(row.stcd);
-                fetch(`http://localhost:8080/CZ/${row.stcd}`, {
-                    method: 'DELETE'
+                this.$confirm('此操作将永久删除该测站信息, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
                 }).then(() => {
-                    this.fetchData();
+                    fetch(`http://localhost:8080/CZ/${row.stcd}`, {
+                        method: 'DELETE'
+                    }).then(() => {
+                        this.fetchData();
+                        this.$message({
+                            type: 'success',
+                            message: '删除成功!'
+                        });
+                    });
+                }).catch(() => {
+                    // this.$message({
+                    //     type: 'info',
+                    //     message: '已取消'
+                    // });
                 });
             },
             updateRow(row) {

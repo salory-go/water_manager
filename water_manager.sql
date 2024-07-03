@@ -275,15 +275,17 @@ INSERT INTO `smzflgccygb` VALUES ('60540350', '2.01050689145569e+19', '2010-12-2
 SET FOREIGN_KEY_CHECKS = 1;
 
 # 管理员表
+DROP TABLE IF EXISTS `administrator`;
 create table administrator
 (
     id       int auto_increment
         primary key,
-    username varchar(20) not null comment '用户名',
-    password varchar(20) not null comment '密码',
+    username varchar(20)   not null comment '用户名',
+    password varchar(20)   not null comment '密码',
+    level    int default 1 not null comment '权限等级',
     constraint administrator_pk
         unique (username)
 );
 
 # 管理员数据
-insert into administrator(username, password) values ('root', '123456');
+insert into administrator(username, password, level) values ('root', '123456', 2), ('zhangsan', '0123456', 1);

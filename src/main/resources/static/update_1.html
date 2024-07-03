@@ -17,7 +17,7 @@
             <h2>修改测站基本信息</h2>
         </el-header>
         <el-main>
-            <el-form ref="form" :rules="rules1" :model="form" label-width="120px">
+            <el-form ref="form" :rules="rules" :model="form" label-width="120px">
                 <el-form-item label="测站名称" prop="name">
                     <el-input v-model="form.name"></el-input>
                 </el-form-item>
@@ -33,10 +33,8 @@
                             align="right"
                             type="date"
                             value-format="yyyy-MM-dd"
-                            placeholder="选择日期"
-                            :picker-options="pickerOptions">
+                            placeholder="选择日期">
                     </el-date-picker>
-<!--                    <el-input v-model="form.startTime"></el-input>-->
                 </el-form-item>
                 <el-form-item label="结束时间" prop="endTime">
                     <el-date-picker
@@ -44,8 +42,7 @@
                             align="right"
                             type="date"
                             value-format="yyyy-MM-dd"
-                            placeholder="选择日期"
-                            :picker-options="pickerOptions">
+                            placeholder="选择日期">
                     </el-date-picker>
 <!--                    <el-input v-model="form.endTime"></el-input>-->
                 </el-form-item>
@@ -85,15 +82,17 @@
                     e: '',
                     w: ''
                 },
-                rules1:{
+                rules:{
                     name: [
                         { required: true, message: '请输入测站名称', trigger: 'blur' },
                         { max: 30, message: '长度须小于30字符', trigger: 'blur' }
                     ],
                     address: [
+                        { required: true, message: '请输入测站位置', trigger: 'blur' },
                         { max: 50, message: '测站位置最长为50个字符', trigger: 'blur' }
                     ],
                     type: [
+                        { required: true, message: '请输入测站类型', trigger: 'blur' },
                         { min:4, max: 4, message: '测站类型须为4个字符', trigger: 'blur' },
                         { validator: (rule, value, callback) => {
                                 if (isNaN(Number(value))) {
@@ -103,8 +102,14 @@
                                 }
                             }, trigger: 'blur' }
                     ],
+                    startTime: [
+                        { required: true, message: '请选择开始时间', trigger: 'blur' },
+                    ],
+                    endTime: [
+                        { required: true, message: '请选择结束时间', trigger: 'blur' },
+                    ],
                     e: [
-                        // { type: 'number', message: '东经必须为数字', trigger: 'blur' },
+                        { required: true, message: '请输入经度', trigger: 'blur' },
                         { validator: (rule, value, callback) => {
                                 if (isNaN(Number(value))) {
                                     callback(new Error('经度必须为数字'));
@@ -116,9 +121,10 @@
                             }, trigger: 'blur' }
                     ],
                     w: [
+                        { required: true, message: '请输入纬度', trigger: 'blur' },
                         { validator: (rule, value, callback) => {
                                 if (isNaN(Number(value))) {
-                                    callback(new Error('维度必须为数字'));
+                                    callback(new Error('纬度必须为数字'));
                                 } else if (Number(value) !== '' && (Number(value) < -90 || Number(value) > 90)) {
                                     callback(new Error('纬度范围为 -90 到 90 之间'))
                                 } else {
@@ -153,22 +159,30 @@
         },
         methods: {
             submitForm1() {
-                axios.post('http://localhost:8080/CZ', this.form, {
-                    headers: {
-                        'Content-Type': 'application/json',
+                this.$refs.form.validate(valid => {
+                    if (valid) {
+                        axios.post('http://localhost:8080/CZ', this.form, {
+                            headers: {
+                                'Content-Type': 'application/json',
+                            }
+                        })
+                            .then(response => {
+                                if (response.status === 200) {
+                                    window.location.href = '1.html';
+                                } else {
+                                    this.$message.error('提交失败');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error submitting form:', error);
+                                this.$message.error('提交失败');
+                            });
+                    } else {
+                        console.log('表单验证失败!');
+                        this.$message.error('表单验证失败');
+                        return false;
                     }
-                })
-                    .then(response => {
-                        if (response.status === 200) {
-                            window.location.href = '1.html';
-                        } else {
-                            this.$message.error('提交失败');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error submitting form:', error);
-                        this.$message.error('提交失败');
-                    });
+                });
             }
         }
     });

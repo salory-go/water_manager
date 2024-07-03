@@ -85,9 +85,25 @@ public interface IMapper {
             "WHERE STCD = #{code}")
     boolean updateCZ3(CZ cz);
 
+    @Update("UPDATE czglxxygb " +
+            "SET " +
+            "ADDVCD = #{ADDVCD}, " +
+            "WRRGCD = #{WRRGCD}, " +
+            "ADMNSTCD = #{ADMNSTCD}, " +
+            "BGTM = #{BGTM}, " +
+            "ENDTM = #{ENDTM} " +
+            "WHERE STCD = #{STCD}")
+    boolean updateCZGL1(CZGL czgl);
+
+    @Update("UPDATE czylb " +
+            "SET " +
+            "STNM = #{STNM} " +
+            "WHERE STCD = #{STCD}")
+    boolean updateCZGL2(CZGL czgl);
+
 
         @Insert("INSERT INTO hljbxxb (RVCD, RVNM, HNNM, BSHNNM) " +
-            "VALUES (#{cz.waterName}, #{cz.riverName}, #{cz.waterField}, '长江流域')")
+            "VALUES (#{cz.waterName}, #{cz.riverName}, #{cz.waterField}, '黄河流域')")
     boolean addCZ1(@Param("cz") CZ cz);
 
         @Insert("INSERT INTO czdlxxb (STCD, STLC, LGTD, LTTD) " +

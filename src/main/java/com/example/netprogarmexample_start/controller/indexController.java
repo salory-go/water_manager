@@ -66,6 +66,16 @@ public class indexController {
         return new Result("200",null,null);
     }
 
+    @PostMapping("/CZGL")
+    @ResponseBody
+    public Result updateGL(@RequestBody CZGL czgl){
+        System.out.println(czgl);
+        System.out.println("修改");
+        System.out.println(mapper.updateCZGL1(czgl));
+        System.out.println(mapper.updateCZGL2(czgl));
+        return new Result("200",null,null);
+    }
+
     @PostMapping("/CZ/add")
     @ResponseBody
     public Result add(@RequestBody CZ cz) {

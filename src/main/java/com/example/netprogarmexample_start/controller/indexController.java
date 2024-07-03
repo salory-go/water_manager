@@ -68,7 +68,7 @@ public class indexController {
     @ResponseBody
     public Result add(@RequestBody CZ cz) {
         System.out.println(cz);
-        System.out.println(mapper.addCZ1(cz));
+//        System.out.println(mapper.addCZ1(cz));
         System.out.println(mapper.addCZ2(cz));
         System.out.println(mapper.addCZ3(cz));
         System.out.println(mapper.addCZ4(cz));

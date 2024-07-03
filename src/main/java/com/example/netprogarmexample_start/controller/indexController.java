@@ -51,6 +51,7 @@ public class indexController {
     @ResponseBody
     public Result delete(@PathVariable String code) {
         mapper.delete(code);
+        mapper.delete2(code);
         return new Result("200", null, null);
     }
 

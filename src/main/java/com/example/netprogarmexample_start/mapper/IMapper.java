@@ -47,7 +47,8 @@ public interface IMapper {
             "    c.RVCD AS \"code\",\n" +
             "    c.RVNM AS \"name\",\n" +
             "    c.HNNM AS \"HName\",\n" +
-            "    c.BSHNNM AS \"Lname\"\n" +
+            "    c.BSHNNM AS \"Lname\",\n" +
+            "    a.STCD AS \"stcd\"\n" +
             "FROM\n" +
             "    czylb a\n" +
             "JOIN\n" +
@@ -58,6 +59,9 @@ public interface IMapper {
 
     @Delete("DELETE FROM czylb WHERE STCD = #{code}")
     public int delete(@Param("code") String code);
+
+    @Delete("DELETE FROM czglxxygb WHERE STCD = #{code}")
+    public int delete2(@Param("code") String code);
 
     @Update("UPDATE czylb " +
             "SET " +
@@ -82,8 +86,8 @@ public interface IMapper {
     boolean updateCZ3(CZ cz);
 
 
-        @Insert("INSERT INTO hljbxxb (RVCD, RVNM, HNNM) " +
-            "VALUES (#{cz.waterName}, #{cz.riverName}, #{cz.waterField})")
+        @Insert("INSERT INTO hljbxxb (RVCD, RVNM, HNNM, BSHNNM) " +
+            "VALUES (#{cz.waterName}, #{cz.riverName}, #{cz.waterField}, '长江流域')")
     boolean addCZ1(@Param("cz") CZ cz);
 
         @Insert("INSERT INTO czdlxxb (STCD, STLC, LGTD, LTTD) " +
@@ -91,8 +95,8 @@ public interface IMapper {
     boolean addCZ2(@Param("cz") CZ cz);
 
 
-    @Insert("INSERT INTO czglxxygb (STCD, RVCD, BGTM, ENDTM, ADDVCD) " +
-            "VALUES (#{cz.code}, #{cz.waterName}, #{cz.startTime}, #{cz.endTime},'648259')")
+    @Insert("INSERT INTO czglxxygb (STCD, RVCD, BGTM, ENDTM, ADDVCD, WRRGCD, ADMNSTCD, MNAG) " +
+            "VALUES (#{cz.code}, #{cz.waterName}, #{cz.startTime}, #{cz.endTime},'648259', '2134958', '2005698723', '3654870145')")
     boolean addCZ3(@Param("cz") CZ cz);
 
     @Insert("INSERT INTO czylb (STNM,STCD,STTP) " +

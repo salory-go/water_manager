@@ -17,4 +17,5 @@ public class HL {
     private String code;
     private String HName;
     private String LName;
+    private String stcd;
 }

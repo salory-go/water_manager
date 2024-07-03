@@ -68,7 +68,8 @@
         window.location.href = 'add.html';
       },
       deleteRow(row) {
-        fetch(`http://localhost:8080/HL/${row.code}`, {
+        console.log(row.stcd);
+        fetch(`http://localhost:8080/CZ/${row.stcd}`, {
           method: 'DELETE'
         }).then(() => {
           this.fetchData();

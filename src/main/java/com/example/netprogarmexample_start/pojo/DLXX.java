@@ -19,6 +19,6 @@ public class DLXX {
     private String STCD;    //测站编码
     private String STLC;    //测站位置
     private String NT;
-    private BigDecimal LGTD;    //纬度
-    private BigDecimal LTTD;    //经度
+    private BigDecimal LGTD;    //经度
+    private BigDecimal LTTD;    //纬度
 }

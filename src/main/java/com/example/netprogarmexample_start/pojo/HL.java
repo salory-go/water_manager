@@ -11,11 +11,10 @@ import lombok.Data;
  **/
 @Data
 public class HL {
-
-    private String CZName;
-    private String name;
-    private String code;
-    private String HName;
-    private String LName;
-    private String stcd;
+    private String CZName;  //czylb.STNM
+    private String name;    //hljbxxb.RVNM
+    private String code;    //hljbxxb.RVCD
+    private String HName;   //hljbxxb.HNNM
+    private String LName;   //hljbxxb.BSHNNM
+    private String stcd;    //czylb.STCD
 }

@@ -14,16 +14,16 @@ import lombok.Data;
 
 @Data
 public class CZ {
-    private String name;
-    private String code;
-    private String E;
-    private String W;
-    private String address;
-    private String startTime;
-    private String endTime;
-    private String waterName;
-    private String riverName;
-    private String waterField;
-    private String type;
-    private String Acd;
+    private String name;    //czylb.STNM
+    private String code;    //czylb.STCD
+    private String E;   //czdlxxb.LGTD
+    private String W;   //czdlxxb.LTTD
+    private String address; //czdlxxb.STLC
+    private String startTime;   //czglxxygb.BGTM
+    private String endTime; //czglxxygb.ENDTM
+    private String waterName;   //czglxxygb.RVCD
+    private String riverName;   //hljbxxb.RVNM
+    private String waterField;  //hljbxxb.HNNM
+    private String type;    //czylb.STTP
+    private String Acd; //czglxxygb.ADDVCD
 }

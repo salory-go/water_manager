@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>修改测站详细信息</title>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+
+<div id="app">
+    <el-container>
+        <el-header>
+            <h2>修改测站详细信息</h2>
+        </el-header>
+        <el-form :model="form" :rules="rules2" ref="form" label-width="120px">
+            <el-form-item label="测站编码">
+                <el-input v-model="form.stcd" disabled></el-input>
+            </el-form-item>
+            <el-form-item label="测站名称" prop="STNM">
+                <el-input v-model="form.stnm"></el-input>
+            </el-form-item>
+            <el-form-item label="开始时间">
+                <el-date-picker
+                        v-model="form.bgtm"
+                        align="right"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="选择日期"
+                        :picker-options="pickerOptions">
+                </el-date-picker>
+            </el-form-item>
+            <el-form-item label="结束时间">
+                <el-date-picker
+                        v-model="form.endtm"
+                        align="right"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="选择日期"
+                        :picker-options="pickerOptions">
+                </el-date-picker>
+            </el-form-item>
+            <el-form-item label="河流编码">
+                <el-input v-model="form.rvcd" disabled></el-input>
+            </el-form-item>
+            <el-form-item label="行政区编码" prop="ADDVCD">
+                <el-input v-model="form.addvcd"></el-input>
+            </el-form-item>
+            <el-form-item label="水资源编码" prop="WRRGCD">
+                <el-input v-model="form.wrrgcd"></el-input>
+            </el-form-item>
+            <el-form-item label="水功能区编码" prop="WFRCD">
+                <el-input v-model="form.wfrcd"></el-input>
+            </el-form-item>
+            <el-form-item label="行政区管理编码" prop="ADMNSTCD">
+                <el-input v-model="form.admnstcd"></el-input>
+            </el-form-item>
+            <el-form-item label="管理机构编码" prop="MNAG">
+                <el-input v-model="form.mnag"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="submitForm2('form')">提交</el-button>
+            </el-form-item>
+        </el-form>
+    </el-container>
+</div>
+
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                form: {
+                    addvcd: '',
+                    admnstcd: '',
+                    bgtm: '',
+                    endtm: '',
+                    mnag: '',
+                    nt: '',
+                    rvcd: '',
+                    stcd: '',
+                    stnm: '',
+                    wfrcd: '',
+                    wrrgcd: ''
+                },
+                rules2: {
+                    STNM: [
+                        { required: true, message: '请输入测站名称', trigger: 'blur' },
+                        { max: 30, message: '长度须小于30字符', trigger: 'blur' }
+                    ],
+                    ADDVCD: [
+                        { required: true, message: '请输入行政区编码', trigger: 'blur' },
+                        { min: 6, max: 6, message: '行政区编码长度为 6 个字符', trigger: 'blur' }
+                    ],
+                    WRRGCD: [
+                        { min: 7, max: 7, message: '水资源编码为 7 个字符', trigger: 'blur' }
+                    ],
+                    WFRCD: [
+                        { min: 14, max: 14, message: '水功能区编码为 14 个字符', trigger: 'blur' }
+                    ],
+                    ADMNSTCD: [
+                        { min: 10, max: 10, message: '行政区管理编码为 10 个字符', trigger: 'blur' }
+                    ],
+                    MNAG: [
+                        { min: 10, max: 10, message: '管理机构编码为 10 个字符', trigger: 'blur' }
+                    ],
+                }
+            };
+        },
+        created() {
+            // 获取URL参数的函数
+            function getUrlParameter(name) {
+                name = name.replace(/[[]/, '\\[').replace(/[\]]/, '\\]');
+                const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+                const results = regex.exec(location.search);
+                return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+            }
+
+            // 在页面加载时获取传递的数据
+            this.form = {
+                addvcd: getUrlParameter('addvcd'),
+                admnstcd: getUrlParameter('admnstcd'),
+                bgtm: getUrlParameter('bgtm').slice(0,10),
+                endtm: getUrlParameter('endtm').slice(0,10),
+                mnag: getUrlParameter('mnag'),
+                nt: getUrlParameter('nt'),
+                rvcd: getUrlParameter('rvcd'),
+                stcd: getUrlParameter('stcd'),
+                stnm: getUrlParameter('stnm'),
+                wfrcd: getUrlParameter('wfrcd'),
+                wrrgcd: getUrlParameter('wrrgcd')
+            };
+            console.log(this.form);
+        },
+        methods: {
+            submitForm2() {
+                axios.post('http://localhost:8080/CZ', this.form, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                    .then(response => {
+                        if (response.status === 200) {
+                            window.location.href = '3.html';
+                        } else {
+                            this.$message.error('提交失败');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error submitting form:', error);
+                        this.$message.error('提交失败');
+                    });
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

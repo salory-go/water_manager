@@ -58,6 +58,7 @@ public class indexController {
     @ResponseBody
     public Result update(@RequestBody CZ cz){
         System.out.println(cz);
+        System.out.println("修改");
         System.out.println(mapper.updateCZ1(cz));
         System.out.println(mapper.updateCZ2(cz));
         System.out.println(mapper.updateCZ3(cz));
@@ -68,12 +69,11 @@ public class indexController {
     @ResponseBody
     public Result add(@RequestBody CZ cz) {
         System.out.println(cz);
-//        System.out.println(mapper.addCZ1(cz));
+        System.out.println("添加");
+        System.out.println(mapper.addCZ1(cz));
         System.out.println(mapper.addCZ2(cz));
         System.out.println(mapper.addCZ3(cz));
         System.out.println(mapper.addCZ4(cz));
-
-
         return new Result("200", null, null);
 
 }

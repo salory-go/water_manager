@@ -92,7 +92,7 @@ public interface IMapper {
 
 
     @Insert("INSERT INTO czglxxygb (STCD, RVCD, BGTM, ENDTM, ADDVCD) " +
-            "VALUES (#{cz.code}, #{cz.waterName}, #{cz.startTime}, #{cz.endTime},#{cz.Acd})")
+            "VALUES (#{cz.code}, #{cz.waterName}, #{cz.startTime}, #{cz.endTime},'648259')")
     boolean addCZ3(@Param("cz") CZ cz);
 
     @Insert("INSERT INTO czylb (STNM,STCD,STTP) " +

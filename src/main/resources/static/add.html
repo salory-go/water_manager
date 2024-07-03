@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>表格输入页面</title>
+    <title>新增测站</title>
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
@@ -27,6 +27,12 @@
                 <el-form-item label="站址" prop="address">
                     <el-input v-model="form.address"></el-input>
                 </el-form-item>
+                <el-form-item label="河流名称" prop="riverName">
+                    <el-input v-model="form.riverName"></el-input>
+                </el-form-item>
+                <el-form-item label="水系名称" prop="waterField">
+                    <el-input v-model="form.waterField"></el-input>
+                </el-form-item>
                 <el-form-item label="开始时间" prop="startTime">
                     <el-date-picker
                             v-model="form.startTime"
@@ -47,7 +53,6 @@
                             placeholder="选择日期"
                             :picker-options="pickerOptions">
                     </el-date-picker>
-                    <!--                    <el-input v-model="form.endTime"></el-input>-->
                 </el-form-item>
                 <el-form-item label="河流编码" prop="waterName">
                     <el-input v-model="form.waterName"></el-input>
@@ -62,7 +67,7 @@
                     <el-input v-model="form.w"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="submitForm">提交</el-button>
+                    <el-button type="primary" @click="handleAdd">提交</el-button>
                 </el-form-item>
             </el-form>
         </el-main>
@@ -78,6 +83,8 @@
                     name: '',
                     code: '',
                     address: '',
+                    riverName: '',
+                    waterField: '',
                     startTime: '',
                     endTime: '',
                     waterName: '',
@@ -103,6 +110,14 @@
                     ],
                     address: [
                         { max: 50, message: '测站位置最长为50个字符', trigger: 'blur' }
+                    ],
+                    riverName: [
+                        { required: true, message: '请输入河流名称', trigger: 'blur' },
+                        { max: 32, message: '长度须小于32字符', trigger: 'blur' }
+                    ],
+                    waterField: [
+                        { required: true, message: '请输入水系名称', trigger: 'blur' },
+                        { max: 32, message: '长度须小于32字符', trigger: 'blur' }
                     ],
                     waterName: [
                         { required: true, message: '请输入河流编码', trigger: 'blur' },
@@ -166,6 +181,8 @@
                 name: getUrlParameter('name'),
                 code: getUrlParameter('code'),
                 address: getUrlParameter('address'),
+                riverName: getUrlParameter('riverName'),
+                waterField: getUrlParameter('waterField'),
                 startTime: getUrlParameter('startTime'),
                 endTime: getUrlParameter('endTime'),
                 waterName: getUrlParameter('waterName'),
@@ -175,22 +192,23 @@
             };
         },
         methods: {
-            submitForm() {
-                axios.post('http://localhost:8080/CZ', this.form, {
+            handleAdd() {
+                axios.post('http://localhost:8080/CZ/add', this.form, {
                     headers: {
                         'Content-Type': 'application/json',
                     }
                 })
                     .then(response => {
                         if (response.status === 200) {
+                            this.$message.error('你交牛魔呢');
                             window.location.href = '1.html';
                         } else {
-                            this.$message.error('提交失败');
+                            this.$message.error('提交失败1');
                         }
                     })
                     .catch(error => {
                         console.error('Error submitting form:', error);
-                        this.$message.error('提交失败');
+                        this.$message.error('提交失败2');
                     });
             }
         }
@@ -199,47 +217,3 @@
 
 </body>
 </html>
-
-
-
-<!--
-rules:{
-                    name: [
-                        { required: true, message: '请输入测站名称', trigger: 'blur' },
-                        { max: 30, message: '长度须小于30字符', trigger: 'blur' }
-                    ],
-                    code: [
-                        { required: true, message: '请输入测站编码', trigger: 'blur' },
-                        { min: 8, max: 8, message: '测站编码长度为 8个字符', trigger: 'blur' }
-                    ],
-                    address: [
-                        { max: 50, message: '测站位置最长为 50 个字符', trigger: 'blur' }
-                    ],
-                    waterName: [
-                        { required: true, message: '请输入河流编码', trigger: 'blur' },
-                        { min: 8, max: 8, message: '河流编码长度为 8 个字符', trigger: 'blur' }
-                    ],
-                    type: [
-                        { max: 4, message: '测站类型最长为 4 个字符', trigger: 'blur' }
-                    ],
-                    e: [
-                        { type: 'number', message: '东经必须为数字', trigger: 'blur' },
-                        { validator: (rule, value, callback) => {
-                                if (value !== '' && (value < 0 || value > 180)) {
-                                    callback(new Error('东经范围为 0 到 180 之间'))
-                                } else {
-                                    callback()
-                                }
-                            }, trigger: 'blur' }
-                    ],
-                    w: [
-                        { type: 'number', message: '纬度必须为数字', trigger: 'blur' },
-                        { validator: (rule, value, callback) => {
-                                if (value !== '' && (value < -90 || value > 90)) {
-                                    callback(new Error('纬度范围为 -90 到 90 之间'))
-                                } else {
-                                    callback()
-                                }
-                            }, trigger: 'blur' }
-                    ],
--->

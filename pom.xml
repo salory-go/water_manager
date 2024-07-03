@@ -70,11 +70,11 @@
             <version>1.2.9</version>
         </dependency>
         <!--fastJSON-->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastJSON</artifactId>
-            <version>1.2.83</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba</groupId>-->
+<!--            <artifactId>fastjson</artifactId>-->
+<!--            <version>1.2.9</version>-->
+<!--        </dependency>-->
     </dependencies>
     <dependencyManagement>
         <dependencies>

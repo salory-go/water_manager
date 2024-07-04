@@ -21,7 +21,12 @@
         el: '#app',
         data: {
             map: null,
-            markers: []
+            markers: [
+                { lat: 51.505, lng: -0.09, message: "North Latitude, West Longitude" }, // 北纬，西经
+                { lat: -51.505, lng: -0.09, message: "South Latitude, West Longitude" }, // 南纬，西经
+                { lat: 51.505, lng: 0.09, message: "North Latitude, East Longitude" }, // 北纬，东经
+                { lat: -51.505, lng: 0.09, message: "South Latitude, East Longitude" } // 南纬，东经
+            ]
         },
         mounted() {
             this.initMap();
@@ -29,38 +34,36 @@
         methods: {
             initMap() {
                 // 初始化地图，并设置中心点和缩放级别
-                this.map = L.map('map').setView([30, 120], 8);
+                this.map = L.map('map').setView([51.505, -0.09], 3);
 
                 // 添加OpenStreetMap的图层
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 }).addTo(this.map);
 
-                fetch('http://localhost:8080/CZ')
-                    .then(response => response.json())
-                    .then(data => {
-                        data.forEach((sdata, i) => {
-                            this.markers.push({
-                                lat: sdata.w,
-                                lng: sdata.e,
-                                message: sdata.name,
-                                code: sdata.code
-                            })
-                        });
-                        console.log(this.markers[0].lat);
-                        this.markers.forEach(marker => {
-                            let mark = L.marker([marker.lat, marker.lng]).addTo(this.map);
-                            mark.bindPopup(marker.message).openPopup();
-                            let circle = L.circle([marker.lat, marker.lng], {
-                                color: 'red',
-                                fillColor: '#f03',
-                                fillOpacity: 0.5,
-                                radius: 20
-                            }).addTo(this.map);
-                        });
-                    })
-                    .catch(error => console.error('Error fetching data:', error));
-            },
+                // 添加标记点并绑定鼠标事件
+                this.markers.forEach(marker => {
+                    let mark = L.marker([marker.lat, marker.lng]).addTo(this.map);
+                    mark.bindPopup(marker.message);
+                    mark.on('mouseover', function (e) {
+                        this.openPopup();
+                    });
+                    mark.on('mouseout', function (e) {
+                        this.closePopup();
+                    });
+                    mark.on('click', function (e) {
+                        console.log(e);
+                    });
+                });
+
+                // 也可以添加一个圆形覆盖物
+                var circle = L.circle([51.508, -0.11], {
+                    color: 'red',
+                    fillColor: '#f03',
+                    fillOpacity: 0.5,
+                    radius: 500
+                }).addTo(this.map);
+            }
         }
     });
 </script>

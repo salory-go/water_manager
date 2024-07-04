@@ -80,6 +80,7 @@
                         this.loading = false;
                         if (response.data.code === 0) {
                             localStorage.setItem("token", response.data.data);
+                            sessionStorage.setItem("token", response.data.data);
                             location.href = "http://localhost:8080/1.html";
                         } else {
                             this.$message({

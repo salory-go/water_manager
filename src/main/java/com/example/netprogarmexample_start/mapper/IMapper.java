@@ -58,10 +58,24 @@ public interface IMapper {
     public List<HL> getHL();
 
     @Delete("DELETE FROM czylb WHERE STCD = #{code}")
-    public int delete(@Param("code") String code);
+    public int delete1(@Param("code") String code);
 
     @Delete("DELETE FROM czglxxygb WHERE STCD = #{code}")
     public int delete2(@Param("code") String code);
+
+    @Delete("DELETE FROM czdlxxb WHERE STCD = #{code}")
+    public int delete3(@Param("code") String code);
+
+    @Delete("DELETE FROM hljbxxb\n" +
+            "WHERE RVCD IN (\n" +
+            "    SELECT RVCD FROM (\n" +
+            "                         SELECT hljbxxb.RVCD\n" +
+            "                         FROM hljbxxb\n" +
+            "                                  LEFT JOIN czglxxygb ON hljbxxb.RVCD = czglxxygb.RVCD\n" +
+            "                         WHERE czglxxygb.RVCD IS NULL\n" +
+            "                     ) AS tmp\n" +
+            ");")
+    public int delete4(@Param("code") String code);
 
     @Update("UPDATE czylb " +
             "SET " +

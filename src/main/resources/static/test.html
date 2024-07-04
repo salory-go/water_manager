@@ -1,103 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
+    <title>Leaflet Map with Vue.js</title>
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>表格输入页面</title>
+    <!-- 引入Leaflet的CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- 引入Vue.js -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 </head>
-<style>
-    .centered-button {
-        display: block;
-        margin: auto;
-        padding: 10px 20px; /* 调整按钮大小 */
-    }
-</style>
 <body>
+<div id="app">
+    <div id="map" style="width: 100%; height: 600px;"></div>
+</div>
 
-<h2>表格输入</h2>
-
-<form id="stationForm">
-    <table class="centered-button">
-        <tr>
-            <th>测站名称</th>
-            <th>测站类型</th>
-        </tr>
-
-        <tr>
-            <!-- 将前一个页面传递的数据显示在输入框中 -->
-            <td><input id="name" type="text" name="name" required></td>
-
-            <td><input id="type" type="text" name="type" required></td>
-
-        </tr>
-        <tr>
-            <th>河流编码</th>
-            <th>河流名称</th>
-            <th>水系名称</th>
-        </tr>
-        <tr>
-            <td><input id="waterName" type="text" name="waterName" required></td>
-            <td><input id="riverName" type="text" name="riverName" required></td>
-            <td><input id="waterField" type="text" name="waterField" required></td>
-        </tr>
-        <tr>
-            <th>测站编码</th>
-            <th>站址</th>
-            <th>东经</th>
-            <th>北纬</th>
-        </tr>
-        <tr>
-            <td><input id="code" type="text" name="code" required></td>
-            <td><input id="address" type="text" name="address" required></td>
-            <td><input id="e"  type="text" name="e"  required></td>
-            <td><input id="w"  type="text" name="w"  required></td>
-
-        </tr>
-        <tr>
-            <th>开始时间</th>
-            <th>结束时间</th>
-            <th>行政区划码</th>
-        </tr>
-        <tr>
-            <td><input id="startTime" type="text" name="startTime"  required></td>
-            <td><input id="endTime" type="text" name="endTime"  required></td>
-            <td><input id="acd"  type="text" name="acd"  required></td>
-        </tr>
-    </table>
-
-
-
-    <button class="centered-button" type="button" onclick="submitForm()">提交</button>
-
-</form>
-
+<!-- 引入Leaflet的JavaScript -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
-    function submitForm() {
-        // 获取表单数据
-        const formData = new FormData(document.getElementById('stationForm'));
-        console.log(JSON.stringify(Object.fromEntries(formData)))
-        // 发送 POST 请求
-        fetch('http://localhost:8080/CZ/add', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(Object.fromEntries(formData)),
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Error submitting form`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                // 处理成功的响应
-                console.log('Form submitted successfully:', data);
-                window.location.href = `1.html`;
-            })
-            .catch(error => console.error('Error submitting form:', error));
-    }
-</script>
+    new Vue({
+        el: '#app',
+        data: {
+            map: null,
+            markers: [
+                { lat: 51.505, lng: -0.09, message: "North Latitude, West Longitude" }, // 北纬，西经
+                { lat: -51.505, lng: -0.09, message: "South Latitude, West Longitude" }, // 南纬，西经
+                { lat: 51.505, lng: 0.09, message: "North Latitude, East Longitude" }, // 北纬，东经
+                { lat: -51.505, lng: 0.09, message: "South Latitude, East Longitude" } // 南纬，东经
+            ]
+        },
+        mounted() {
+            this.initMap();
+        },
+        methods: {
+            initMap() {
+                // 初始化地图，并设置中心点和缩放级别
+                this.map = L.map('map').setView([51.505, -0.09], 3);
 
+                // 添加OpenStreetMap的图层
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(this.map);
+
+                // 添加标记点并绑定鼠标事件
+                this.markers.forEach(marker => {
+                    let mark = L.marker([marker.lat, marker.lng]).addTo(this.map);
+                    mark.bindPopup(marker.message);
+                    mark.on('mouseover', function (e) {
+                        this.openPopup();
+                    });
+                    mark.on('mouseout', function (e) {
+                        this.closePopup();
+                    });
+                    mark.on('click', function (e) {
+                        console.log(e);
+                    });
+                });
+
+                // 也可以添加一个圆形覆盖物
+                var circle = L.circle([51.508, -0.11], {
+                    color: 'red',
+                    fillColor: '#f03',
+                    fillOpacity: 0.5,
+                    radius: 500
+                }).addTo(this.map);
+            }
+        }
+    });
+</script>
 </body>
 </html>

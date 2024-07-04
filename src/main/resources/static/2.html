@@ -22,6 +22,7 @@
     <el-menu-item index="1"><a href="1.html">测站基本信息表</a></el-menu-item>
     <el-menu-item index="2"><a href="2.html">河流基本信息表</a></el-menu-item>
     <el-menu-item index="3"><a href="3.html">测站详细信息表</a></el-menu-item>
+    <el-menu-item index="4"><a href="map.html">测站地理可视化</a></el-menu-item>
   </el-menu>
   <div id="clipped-title1">
       <h1>测站管理</h1>
@@ -44,8 +45,8 @@
       <template slot-scope="scope" width="120">
         <el-button size="mini" type="danger" icon="el-icon-delete" circle
                    @click="deleteRow(scope.row)"></el-button>
-        <el-button size="mini" type="primary" icon="el-icon-edit" circle
-                   @click="updateRow(scope.row)"></el-button>
+        <el-button size="mini" type="primary" icon="el-icon-view" circle
+                   @click="viewRow(scope.row)"></el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -68,18 +69,26 @@
         window.location.href = 'add.html';
       },
       deleteRow(row) {
-        console.log(row.stcd);
-        fetch(`http://localhost:8080/CZ/${row.stcd}`, {
-          method: 'DELETE'
+        this.$confirm('此操作将永久删除该测站信息, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
         }).then(() => {
-          this.fetchData();
+          fetch(`http://localhost:8080/CZ/${row.stcd}`, {
+            method: 'DELETE'
+          }).then(() => {
+            this.fetchData();
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+          });
+        }).catch(() => {
         });
       },
-      updateRow(row) {
-        const params = new URLSearchParams(row).toString();
-        console.log(params);
-        this.$message.error('没写捏🤯');
-        // window.location.href = `update_1.html?${params}`;
+      viewRow(row) {
+        //可以改成定位到那一点
+        window.location.href = `map.html`;
       },
       fetchData() {
         fetch('http://localhost:8080/HL')

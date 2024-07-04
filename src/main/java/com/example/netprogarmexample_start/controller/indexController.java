@@ -50,8 +50,10 @@ public class indexController {
     @DeleteMapping("/CZ/{code}")
     @ResponseBody
     public Result delete(@PathVariable String code) {
-        mapper.delete(code);
-        mapper.delete2(code);
+        System.out.println(mapper.delete1(code));
+        System.out.println(mapper.delete2(code));
+        System.out.println(mapper.delete3(code));
+        System.out.println(mapper.delete4(code));
         return new Result("200", null, null);
     }
 

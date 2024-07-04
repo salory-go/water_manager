@@ -4,12 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+//用户权限包装对象
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Administrator {
-    private Integer id;
-    private String username;
-    private String password;
-    private Integer level;
+public class Jurisdiction {
+    private Integer level;  //用户权限等级
+    private String jwt; //JWT令牌
 }

@@ -91,6 +91,14 @@ public class indexController {
 
 }
 
+    @GetMapping("/CZAll/{code}")
+    @ResponseBody
+    public Result getCZAll(@PathVariable String code) {
+        CZAll czAll = mapper.getCZAllByCD(code);
+        System.out.println(czAll);
+        return new Result("200", null, czAll);
+    }
+
     // 河流
 
     @GetMapping("/HL")

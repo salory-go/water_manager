@@ -49,12 +49,14 @@
         <el-table-column prop="type" label="测站类型"></el-table-column>
         <el-table-column prop="e" label="东经"></el-table-column>
         <el-table-column prop="w" label="北纬"></el-table-column>
-        <el-table-column label="操作" width="120">
+        <el-table-column label="操作" width="150">
             <template slot-scope="scope">
                 <el-button size="mini" type="danger" icon="el-icon-delete" circle
                            @click="deleteRow(scope.row)"></el-button>
                 <el-button size="mini" type="primary" icon="el-icon-edit" circle
                            @click="updateRow(scope.row)"></el-button>
+                <el-button size="mini" type="primary" icon="el-icon-view" circle
+                           @click="viewRow(scope.row)"></el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -95,6 +97,11 @@
             updateRow(row) {
                 const params = new URLSearchParams(row).toString();
                 window.location.href = `update_1.html?${params}`;
+            },
+            viewRow(row) {
+                console.log(row.e, row.w);
+                const params = new URLSearchParams({e:row.e, w:row.w}).toString();
+                window.location.href = `map.html?${params}`;
             },
             fetchData() {
                 fetch('http://localhost:8080/CZ')

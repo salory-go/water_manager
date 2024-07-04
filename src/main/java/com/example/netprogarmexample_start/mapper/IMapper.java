@@ -1,9 +1,6 @@
 package com.example.netprogarmexample_start.mapper;
 
-import com.example.netprogarmexample_start.pojo.CZ;
-import com.example.netprogarmexample_start.pojo.CZGL;
-import com.example.netprogarmexample_start.pojo.HL;
-import com.example.netprogarmexample_start.pojo.ZF;
+import com.example.netprogarmexample_start.pojo.*;
 import org.apache.ibatis.annotations.*;
 import org.w3c.dom.ls.LSException;
 
@@ -153,7 +150,8 @@ public interface IMapper {
 
     @Select("select STNM from czylb where STCD = #{stcd}")
     String getCZByCD(@Param("stcd")String stcd);
-//
 
+    @Select("select STNM, czylb.STCD AS STCD, BGTM, ENDTM, czglxxygb.RVCD, RVNM, ADDVCD, STLC, STTP, WRRGCD, HNNM, WFRCD, ADMNSTCD, MNAG, LGTD, LTTD from czylb, czglxxygb, czdlxxb, hljbxxb where czylb.STCD = #{stcd} and czglxxygb.STCD = #{stcd} and czdlxxb.STCD = #{stcd} and hljbxxb.RVCD = (select distinct RVCD from czglxxygb where STCD = #{stcd})\n")
+    CZAll getCZAllByCD(@Param("stcd")String stcd);
 
 }

@@ -40,13 +40,11 @@
     <el-table-column prop="code" label="河流编码"></el-table-column>
     <el-table-column prop="lname" label="流域名称"></el-table-column>
     <el-table-column prop="czname" label="测站名称"></el-table-column>
-    <el-table-column prop="name" label="水系名称"></el-table-column>
-    <el-table-column label="操作">
-      <template slot-scope="scope" width="120">
+    <el-table-column prop="name" label="河流名称"></el-table-column>
+    <el-table-column label="操作" width="80">
+      <template slot-scope="scope">
         <el-button size="mini" type="danger" icon="el-icon-delete" circle
                    @click="deleteRow(scope.row)"></el-button>
-        <el-button size="mini" type="primary" icon="el-icon-view" circle
-                   @click="viewRow(scope.row)"></el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -85,10 +83,6 @@
           });
         }).catch(() => {
         });
-      },
-      viewRow(row) {
-        //可以改成定位到那一点
-        window.location.href = `map.html`;
       },
       fetchData() {
         fetch('http://localhost:8080/HL')

@@ -1,95 +1,241 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Leaflet Map with Vue.js</title>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <link rel="stylesheet" href="./layui-v2.9.3/layui/css/layui.css">
-  <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <title>Leaflet Map with Vue.js</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <link rel="stylesheet" href="./layui-v2.9.3/layui/css/layui.css">
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <style>
+        .drawer-content {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .drawer-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .drawer-label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .drawer-value {
+            color: #666;
+        }
+
+        .drawer-item:last-child {
+            border-bottom: none;
+        }
+    </style>
 </head>
 <body>
 <div id="app">
-  <el-menu class="el-menu-demo" mode="horizontal" class="flex">
-    <el-menu-item index="1"><a href="1.html">测站基本信息表</a></el-menu-item>
-    <el-menu-item index="2"><a href="2.html">河流基本信息表</a></el-menu-item>
-    <el-menu-item index="3"><a href="3.html">测站详细信息表</a></el-menu-item>
-    <el-menu-item index="4"><a href="map.html">测站地理可视化</a></el-menu-item>
-  </el-menu>
-  <div id="map" style="width: 100%; height: 600px;"></div>
+    <el-menu class="el-menu-demo" mode="horizontal" class="flex">
+        <el-menu-item index="1"><a href="1.html">测站基本信息表</a></el-menu-item>
+        <el-menu-item index="2"><a href="2.html">河流基本信息表</a></el-menu-item>
+        <el-menu-item index="3"><a href="3.html">测站详细信息表</a></el-menu-item>
+        <el-menu-item index="4"><a href="map.html">测站地理可视化</a></el-menu-item>
+    </el-menu>
+    <div id="map" style="width: 100%; height: 600px;"></div>
+    <el-drawer
+            :visible.sync="drawer"
+            :before-close="handleClose">
+        <template>
+            <div class="drawer-content">
+                <div class="drawer-item">
+                    <span class="drawer-label">测站名称</span>
+                    <span class="drawer-value">{{ cz.stnm }}</span>
+                </div>
+                <div class="drawer-item">
+                    <span class="drawer-label">测站编码</span>
+                    <span class="drawer-value">{{ cz.stcd }}</span>
+                </div>
+                <div class="drawer-item">
+                    <span class="drawer-label">开始时间</span>
+                    <span class="drawer-value">{{ cz.bgtm }}</span>
+                </div>
+                <div class="drawer-item">
+                    <span class="drawer-label">结束时间</span>
+                    <span class="drawer-value">{{ cz.endtm }}</span>
+                </div>
+                <div class="drawer-item">
+                    <span class="drawer-label">河流编码</span>
+                    <span class="drawer-value">{{ cz.rvcd }}</span>
+                </div>
+                <div class="drawer-item">
+                    <span class="drawer-label">河流名称</span>
+                    <span class="drawer-value">{{ cz.rvnm }}</span>
+                </div>
+                <div class="drawer-item">
+                    <span class="drawer-label">行政编码</span>
+                    <span class="drawer-value">{{ cz.addvcd }}</span>
+                </div>
+                <div class="drawer-item">
+                    <span class="drawer-label">站址</span>
+                    <span class="drawer-value">{{ cz.stlc }}</span>
+                </div>
+                <div class="drawer-item">
+                    <span class="drawer-label">测站类型</span>
+                    <span class="drawer-value">{{ cz.sttp }}</span>
+                </div>
+                <div class="drawer-item">
+                    <span class="drawer-label">水资源编码</span>
+                    <span class="drawer-value">{{ cz.wrrgcd }}</span>
+                </div>
+                <div class="drawer-item">
+                    <span class="drawer-label">水系名称</span>
+                    <span class="drawer-value">{{ cz.hnnm }}</span>
+                </div>
+                <div class="drawer-item">
+                    <span class="drawer-label">水功能区编码</span>
+                    <span class="drawer-value">{{ cz.wfrcd }}</span>
+                </div>
+                <div class="drawer-item">
+                    <span class="drawer-label">行政区编码</span>
+                    <span class="drawer-value">{{ cz.admnstcd }}</span>
+                </div>
+                <div class="drawer-item">
+                    <span class="drawer-label">管理机构编码</span>
+                    <span class="drawer-value">{{ cz.mnag }}</span>
+                </div>
+                <div class="drawer-item">
+                    <span class="drawer-label">东经</span>
+                    <span class="drawer-value">{{ cz.lgtd }}</span>
+                </div>
+                <div class="drawer-item">
+                    <span class="drawer-label">纬度</span>
+                    <span class="drawer-value">{{ cz.lttd }}</span>
+                </div>
+            </div>
+        </template>
+    </el-drawer>
 </div>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script src="./js/element.js"></script>
 <script>
-  new Vue({
-    el: '#app',
-    data: {
-      map: null,
-      markers: []
-    },
-    mounted() {
-      this.initMap();
-    },
-    methods: {
-      initMap() {
-        // 初始化地图，并设置中心点和缩放级别
-        this.map = L.map('map').setView([30, 110], 5);
+    new Vue({
+        el: '#app',
+        data: {
+            map: null,
+            markers: [],
+            drawer: false,
+            mapset: {
+                e: 30,
+                w: 110,
+                s: 5
+            },
+            cz: {},
+            formLabelWidth: '80px'
+        },
+        created() {
+            function getUrlParameter(name) {
+                name = name.replace(/[[]/, '\\[').replace(/[\]]/, '\\]');
+                const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+                const results = regex.exec(location.search);
+                return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+            }
 
-        // 添加OpenStreetMap的图层
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(this.map);
 
-        fetch('http://localhost:8080/CZ')
-                .then(response => response.json())
-                .then(data => {
-                  data.forEach((sdata, i) => {
-                    this.markers.push({
-                      lat: sdata.w,
-                      lng: sdata.e,
-                      message: sdata.name,
-                      code: sdata.code
+            if (getUrlParameter('e')) {
+                this.mapset = {
+                    e: getUrlParameter('e'),
+                    w: getUrlParameter('w'),
+                    s: 8
+                }
+                console.log('有')
+            } else {
+                this.mapset = {
+                    e: 110,
+                    w: 30,
+                    s: 5
+                }
+                console.log('没有')
+            }
+        },
+        mounted() {
+            this.initMap();
+        },
+        methods: {
+            initMap() {
+                // 初始化地图，并设置中心点和缩放级别
+                this.map = L.map('map').setView([this.mapset.w, this.mapset.e], this.mapset.s);
+
+                // 添加OpenStreetMap的图层
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(this.map);
+
+                fetch('http://localhost:8080/CZ')
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach((sdata, i) => {
+                            this.markers.push({
+                                lat: sdata.w,
+                                lng: sdata.e,
+                                message: sdata.name,
+                                code: sdata.code
+                            })
+                        });
+                        console.log(this.markers[0].lat);
+                        this.markers.forEach(marker => {
+                            let mark = L.marker([marker.lat, marker.lng]).addTo(this.map);
+                            mark.bindPopup(marker.message);
+                            mark.on('mouseover', function (e) {
+                                this.openPopup();
+                            });
+                            mark.on('mouseout', function (e) {
+                                this.closePopup();
+                            });
+                            mark.on('click', e => {
+                                // 可以改成跳转到只查询一条信息的表格上
+                                this.turn(marker);
+                            });
+                            let circle = L.circle([marker.lat, marker.lng], {
+                                color: 'red',
+                                fillColor: '#f03',
+                                fillOpacity: 0.5,
+                                radius: 20
+                            }).addTo(this.map);
+                        });
                     })
-                  });
-                  console.log(this.markers[0].lat);
-                  this.markers.forEach(marker => {
-                    let mark = L.marker([marker.lat, marker.lng]).addTo(this.map);
-                    mark.bindPopup(marker.message);
-                    mark.on('mouseover', function (e) {
-                      this.openPopup();
+                    .catch(error => console.error('Error fetching data:', error));
+            },
+            turn(marker) {
+                console.log(marker.code);
+                this.drawer = true;
+                fetch(`http://localhost:8080/CZAll/${marker.code}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        this.cz = data.data;
                     });
-                    mark.on('mouseout', function (e) {
-                      this.closePopup();
+                // this.$confirm('将跳转回测站管理表', '提示', {
+                //   confirmButtonText: '是的',
+                //   cancelButtonText: '算了'
+                // }).then(() => {
+                //   window.location.href = `1.html`;
+                // }).catch(() => {
+                // });
+            },
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => {
                     });
-                    mark.on('click', e => {
-                      // 可以改成跳转到只查询一条信息的表格上
-                      this.turn(marker);
-                    });
-                    let circle = L.circle([marker.lat, marker.lng], {
-                      color: 'red',
-                      fillColor: '#f03',
-                      fillOpacity: 0.5,
-                      radius: 20
-                    }).addTo(this.map);
-                  });
-                })
-                .catch(error => console.error('Error fetching data:', error));
-      },
-      turn(marker) {
-        console.log(marker);
-        // window.location.href = `1.html`;
-        this.$confirm('将跳转回测站管理表', '提示', {
-          confirmButtonText: '是的',
-          cancelButtonText: '算了'
-        }).then(() => {
-          window.location.href = `1.html`;
-        }).catch(() => {
-        });
-      }
-    }
-  });
+            }
+        }
+    });
 </script>
 </body>
 </html>

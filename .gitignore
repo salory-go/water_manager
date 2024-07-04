@@ -33,4 +33,6 @@ build/
 .vscode/
 
 ### configuration ###
-application-dev.yml
+
+# 忽略开发环境配置
+./src/main/resources/application-dev.yml

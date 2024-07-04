@@ -63,10 +63,9 @@
                     mark.on('mouseout', function (e) {
                       this.closePopup();
                     });
-                    mark.on('click', function (e) {
-                      console.log(marker);
+                    mark.on('click', e => {
                       // 可以改成跳转到只查询一条信息的表格上
-                      this.turn();
+                      this.turn(marker);
                     });
                     let circle = L.circle([marker.lat, marker.lng], {
                       color: 'red',
@@ -78,7 +77,9 @@
                 })
                 .catch(error => console.error('Error fetching data:', error));
       },
-      turn() {
+      turn(marker) {
+        console.log(marker);
+        // window.location.href = `1.html`;
         this.$confirm('将跳转回测站管理表', '提示', {
           confirmButtonText: '是的',
           cancelButtonText: '算了'

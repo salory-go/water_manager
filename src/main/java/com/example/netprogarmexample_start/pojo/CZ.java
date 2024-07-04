@@ -21,9 +21,9 @@ public class CZ {
     private String address;
     private String startTime;
     private String endTime;
-    private String waterName;
-    private String riverName;
-    private String waterField;
+    private String waterName;//河流编码
+    private String riverName;//河流名称
+    private String waterField;//河流流域
     private String type;
     private String Acd;
 }

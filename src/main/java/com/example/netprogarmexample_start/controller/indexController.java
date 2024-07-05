@@ -6,6 +6,7 @@ import com.example.netprogarmexample_start.result.Result;
 import com.example.netprogarmexample_start.service.VOService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ public class indexController {
 
     @DeleteMapping("/CZ/{code}")
     @ResponseBody
+    @Transactional
     public Result delete(@PathVariable String code) {
         System.out.println(mapper.delete1(code));
         System.out.println(mapper.delete2(code));
@@ -59,6 +61,7 @@ public class indexController {
 
     @PostMapping("/CZ")
     @ResponseBody
+    @Transactional
     public Result update(@RequestBody CZ cz){
         System.out.println(cz);
         System.out.println("修改");
@@ -70,6 +73,7 @@ public class indexController {
 
     @PostMapping("/CZGL")
     @ResponseBody
+    @Transactional
     public Result updateGL(@RequestBody CZGL czgl){
         System.out.println(czgl);
         System.out.println("修改");
@@ -80,6 +84,7 @@ public class indexController {
 
     @PostMapping("/CZ/add")
     @ResponseBody
+    @Transactional
     public Result add(@RequestBody CZ cz) {
         System.out.println(cz);
         System.out.println("添加");

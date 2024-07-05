@@ -109,7 +109,8 @@
                             }, trigger: 'blur' }
                     ],
                     address: [
-                        { max: 50, message: '测站位置最长为50个字符', trigger: 'blur' }
+                        { required: true, message: '请输入站址', trigger: 'blur' },
+                        { max: 50, message: '站址最长为50个字符', trigger: 'blur' }
                     ],
                     riverName: [
                         { required: true, message: '请输入河流名称', trigger: 'blur' },
@@ -118,6 +119,12 @@
                     waterField: [
                         { required: true, message: '请输入水系名称', trigger: 'blur' },
                         { max: 32, message: '长度须小于32字符', trigger: 'blur' }
+                    ],
+                    startTime: [
+                        { required: true, message: '请选择开始时间', trigger: 'blur' }
+                    ],
+                    endTime: [
+                        { required: true, message: '请选择结束时间', trigger: 'blur' }
                     ],
                     waterName: [
                         { required: true, message: '请输入河流编码', trigger: 'blur' },
@@ -131,6 +138,7 @@
                             }, trigger: 'blur' }
                     ],
                     type: [
+                        { required: true, message: '请输入测站类型', trigger: 'blur' },
                         { min:4, max: 4, message: '测站类型须为4个字符', trigger: 'blur' },
                         { validator: (rule, value, callback) => {
                                 if (isNaN(Number(value))) {
@@ -141,7 +149,7 @@
                             }, trigger: 'blur' }
                     ],
                     e: [
-                        // { type: 'number', message: '东经必须为数字', trigger: 'blur' },
+                        { required: true, message: '请输入经度', trigger: 'blur' },
                         { validator: (rule, value, callback) => {
                                 if (isNaN(Number(value))) {
                                     callback(new Error('经度必须为数字'));
@@ -153,7 +161,7 @@
                             }, trigger: 'blur' }
                     ],
                     w: [
-                        // { type: 'number', message: '纬度必须为数字', trigger: 'blur' },
+                        { required: true, message: '请输入纬度', trigger: 'blur' },
                         { validator: (rule, value, callback) => {
                                 if (isNaN(Number(value))) {
                                     callback(new Error('维度必须为数字'));
@@ -193,23 +201,30 @@
         },
         methods: {
             handleAdd() {
-                axios.post('http://localhost:8080/CZ/add', this.form, {
-                    headers: {
-                        'Content-Type': 'application/json',
+                this.$refs.form.validate(valid => {
+                    if (valid) {
+                        axios.post('http://localhost:8080/CZ/add', this.form, {
+                            headers: {
+                                'Content-Type': 'application/json',
+                            }
+                        })
+                            .then(response => {
+                                if (response.status === 200) {
+                                    window.location.href = '1.html';
+                                } else {
+                                    this.$message.error('提交失败');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error submitting form:', error);
+                                this.$message.error('提交失败');
+                            });
+                    } else {
+                        console.log('表单验证失败!');
+                        this.$message.error('表单验证失败');
+                        return false;
                     }
-                })
-                    .then(response => {
-                        if (response.status === 200) {
-                            this.$message.error('你交牛魔呢');
-                            window.location.href = '1.html';
-                        } else {
-                            this.$message.error('提交失败1');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error submitting form:', error);
-                        this.$message.error('提交失败2');
-                    });
+                });
             }
         }
     });

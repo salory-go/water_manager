@@ -33,6 +33,7 @@ public class LoginController {
             String jwt = JwtUtils.generateJwt(claims);
             //生成权限包装对象
             Jurisdiction jurisdiction = new Jurisdiction();
+            jurisdiction.setName(e.getUsername());
             jurisdiction.setLevel(e.getLevel());
             jurisdiction.setJwt(jwt);
             //返回权限包装对象

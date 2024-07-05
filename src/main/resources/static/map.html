@@ -33,6 +33,12 @@
         .drawer-item:last-child {
             border-bottom: none;
         }
+
+        .user {
+            text-align: right;
+            margin-top: 20px;
+            margin-right: 50px;
+        }
     </style>
 </head>
 <body>
@@ -42,6 +48,7 @@
         <el-menu-item index="2"><a href="2.html">河流基本信息表</a></el-menu-item>
         <el-menu-item index="3"><a href="3.html">测站详细信息表</a></el-menu-item>
         <el-menu-item index="4"><a href="map.html">测站地理可视化</a></el-menu-item>
+        <template><div class="user"><i class="el-icon-user"></i>{{ msg }}</div></template>
     </el-menu>
     <div id="map" style="width: 100%; height: 600px;"></div>
     <el-drawer
@@ -134,7 +141,12 @@
                 s: 5
             },
             cz: {},
-            formLabelWidth: '80px'
+            formLabelWidth: '80px',
+            user: {
+                level: null,
+                user: null
+            },
+            msg: "请先登录"
         },
         created() {
             function getUrlParameter(name) {
@@ -149,7 +161,7 @@
                 this.mapset = {
                     e: getUrlParameter('e'),
                     w: getUrlParameter('w'),
-                    s: 8
+                    s: 15
                 }
                 console.log('有')
             } else {
@@ -163,6 +175,7 @@
         },
         mounted() {
             this.initMap();
+            this.getUser();
         },
         methods: {
             initMap() {
@@ -218,13 +231,13 @@
                         console.log(data);
                         this.cz = data.data;
                     });
-                // this.$confirm('将跳转回测站管理表', '提示', {
-                //   confirmButtonText: '是的',
-                //   cancelButtonText: '算了'
-                // }).then(() => {
-                //   window.location.href = `1.html`;
-                // }).catch(() => {
-                // });
+            },
+            getUser() {
+                if (localStorage.getItem("uname")) {
+                    this.user.name = localStorage.getItem("uname");
+                    this.user.level = localStorage.getItem("level");
+                    this.msg = `welcome, ${this.user.level === '2' ? 'admin' : 'visitor'} ${this.user.name}!`;
+                }
             },
             handleClose(done) {
                 this.$confirm('确认关闭？')

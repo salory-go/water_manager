@@ -14,6 +14,11 @@
       padding: 0;
       text-align: center;
     }
+    .user {
+      text-align: right;
+      margin-top: 20px;
+      margin-right: 50px;
+    }
   </style>
 </head>
 <body>
@@ -23,6 +28,7 @@
     <el-menu-item index="2"><a href="2.html">河流基本信息表</a></el-menu-item>
     <el-menu-item index="3"><a href="3.html">测站详细信息表</a></el-menu-item>
     <el-menu-item index="4"><a href="map.html">测站地理可视化</a></el-menu-item>
+    <template><div class="user"><i class="el-icon-user"></i>{{ msg }}</div></template>
   </el-menu>
   <div id="clipped-title1">
       <h1>测站管理</h1>
@@ -32,7 +38,7 @@
   </div>
 
   <div style="text-align: right; margin-bottom: 10px;margin-right: 10px">
-    <el-button type="primary" icon="el-icon-plus" circle @click="addRow"></el-button>
+    <el-button type="primary" icon="el-icon-plus" circle @click="addRow" :disabled="disable"></el-button>
   </div>
 
   <el-table :data="tableData" style="width: 100%" stripe border>
@@ -44,7 +50,7 @@
     <el-table-column label="操作" width="80">
       <template slot-scope="scope">
         <el-button size="mini" type="danger" icon="el-icon-delete" circle
-                   @click="deleteRow(scope.row)"></el-button>
+                   @click="deleteRow(scope.row)" :disabled="disable"></el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -59,7 +65,13 @@
       return {
         currentTime: '',
         tableData: [],
-        activeIndex: 1
+        activeIndex: 1,
+        user: {
+          level: null,
+          user: null
+        },
+        msg: "请先登录",
+        disable: true
       };
     },
     methods: {
@@ -93,20 +105,18 @@
                 })
                 .catch(error => console.error('Error fetching data:', error));
       },
-      getCurrentTime() {
-        const now = new Date();
-        const hours = now.getHours().toString().padStart(2, '0');
-        const minutes = now.getMinutes().toString().padStart(2, '0');
-        const seconds = now.getSeconds().toString().padStart(2, '0');
-        return `${hours}:${minutes}:${seconds}`;
-      },
-      updateCurrentTime() {
-        this.currentTime = this.getCurrentTime();
+      getUser() {
+        if (localStorage.getItem("uname")) {
+          this.user.name = localStorage.getItem("uname");
+          this.user.level = localStorage.getItem("level");
+          this.msg = `welcome, ${this.user.level === '2'?'admin':'visitor'} ${this.user.name}!`;
+        }
+        this.disable = this.user.level !== '2';
       }
     },
     mounted() {
       this.fetchData();
-      this.updateCurrentTime();
+      this.getUser();
       this.activeIndex = 1;
     }
   });
